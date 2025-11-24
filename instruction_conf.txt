@@ -1,0 +1,34 @@
+# 1.Création de environnement virtuel (python 3.11.9)
+
+    (windows)
+        - python -m venv venv
+        - venv\Scripts\activate
+        - python -m pip install --upgrade 
+        
+        - pip install pandas numpy matplotlib jupyter ipykernel scikit-learn  joblib requests tqdm loguru typer
+
+    
+
+
+
+    (Mac OS / Linux)
+        - python -m venv venv
+        - venv/bin/activate
+        - python -m pip install --upgrade
+        - pip install numpy pandas matplotlib scikit-learn torch torchvision jupyter ipykernel
+
+
+
+## Pour créer u fichier requairements.txt et organiser les packages
+    pip freeze > requirements.txt
+
+
+
+## Si vous avez une erreur :
+     Running cells with 'venv(python)' requires the ipykernel package to be installed.
+    
+   - Etape à suivre:
+        - Il faut supprimer le venv 
+        - Il faut réinstaller le venv et suivre les étape de création de environnement virtuel
+
+
