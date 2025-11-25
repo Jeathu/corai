@@ -9,8 +9,9 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
 
-
+""" Class de prétraitement des données pour l'apprentissage """
 class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
+    # Initialisation du préprocesseur en séparant les colonnes numériques et catégorielles
     def __init__(self):
         self.target_column = "Heart Disease Status"
         self.numerical_columns = [
@@ -46,23 +47,27 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
 
 
+    """ Ajuste le préprocesseur sur les données d'entraînement """
     def fit(self, X: pd.DataFrame, y=None):
         df = X.copy()
         df = self._create_features(df)
 
+        # Séparation des colonnes numériques et catégorielles 
         num_cols = [c for c in self.numerical_columns if c in df.columns]
         cat_cols = [c for c in self.categorical_columns if c in df.columns] + [
             c for c in self.engineered_categoricals if c in df.columns
         ]
 
+        # Normalisation et encodage
         num_pipeline = Pipeline([
             ("imputer", SimpleImputer(strategy="median")),
             ("scaler", StandardScaler())
         ])
         cat_pipeline = Pipeline([
             ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False))  # ✅ Changé
+            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False))
         ])
+
 
         self._preprocessor = ColumnTransformer(
             transformers=[
@@ -89,6 +94,7 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
 
 
+    # Transformation des nouvelles données avec le préprocesseur entraîné
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         if not self._fitted or self._preprocessor is None:
             raise RuntimeError("Le préprocesseur doit être fit avant transform.")
@@ -123,6 +129,10 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
         return result
 
+
+
+
+    #  Variables dérivées sans modifier l'original
     def _create_features(self, df: pd.DataFrame) -> pd.DataFrame:
         if "Age" in df.columns and "age_group" not in df.columns:
             df["age_group"] = pd.cut(df["Age"], bins=[0, 40, 60, 200], labels=["young", "middle", "senior"])
@@ -130,5 +140,9 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
             df["bp_category"] = pd.cut(df["Blood Pressure"], bins=[0, 120, 140, 1000], labels=["normal", "high", "very_high"])
         return df
 
+
+
+
+    # Combinaison des étapes fit et transform
     def fit_transform(self, X: pd.DataFrame, y=None) -> pd.DataFrame:
         return self.fit(X, y).transform(X)

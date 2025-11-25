@@ -1,5 +1,5 @@
 """Preprocessing modules"""
 
-from corai.preprocessing.heart_disease_preprocessor import HeartDiseasePreprocessor
+from corai.preprocessing.cardiac_feature_pipeline import HeartDiseasePreprocessor
 
 __all__ = ["HeartDiseasePreprocessor"]

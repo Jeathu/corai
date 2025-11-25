@@ -6,7 +6,7 @@ from tqdm import tqdm
 import typer
 
 from corai.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-from corai.preprocessing.heart_disease_preprocessor import HeartDiseasePreprocessor 
+from corai.preprocessing.cardiac_feature_pipeline import HeartDiseasePreprocessor 
 
 
 
@@ -14,7 +14,7 @@ app = typer.Typer()
 
 
 
-# Fonction pour charger les données
+# Méthode pour charger les données
 def load_data(path: Path) -> pd.DataFrame:
     logger.info(f"Loading data from {path}")
     df = pd.read_csv(path)

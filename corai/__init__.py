@@ -5,6 +5,6 @@
 __version__ = "0.1.0"
 
 from corai.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-from corai.preprocessing.heart_disease_preprocessor import HeartDiseasePreprocessor
+from corai.preprocessing.cardiac_feature_pipeline import HeartDiseasePreprocessor
 
 __all__ = ["PROCESSED_DATA_DIR", "RAW_DATA_DIR", "HeartDiseasePreprocessor"]
