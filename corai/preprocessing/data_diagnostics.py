@@ -119,8 +119,8 @@ class DataDiagnosticsPreprocessor:
 @app.command()
 def main(
     input_path: Path = RAW_DATA_DIR / "heart_disease.csv",
-    output_path: Path = PROCESSED_DATA_DIR / "processed_heart_disease_smote.csv",
-    apply_smote: bool = True,
+    output_path: Path = PROCESSED_DATA_DIR / "processed_heart_disease_v0.csv",
+    apply_smote: bool = False, # false par défaut pour ne pas forcer l'utilisation de SMOTE
 ) -> None:
     """Prétraitement des données pour entraînement de modèles."""
     pipeline = DataDiagnosticsPreprocessor()
@@ -144,4 +144,4 @@ if __name__ == "__main__":
 
 
 
-# python -m corai.data_diagnostics
+# python -m corai.preprocessing.data_diagnostics
