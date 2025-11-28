@@ -22,7 +22,7 @@ class DataDiagnosticsPreprocessor:
 
 
     # Constructor
-    def __init__(self, target_column: str = "Heart Disease Status"):
+    def __init__(self, target_column: str = "Heart Disease"): # colonne cible par défaut
         self.target_column = target_column
         self.preprocessor = HeartDiseasePreprocessor(target_column=self.target_column)
         self.df: Optional[pd.DataFrame] = None
@@ -118,7 +118,7 @@ class DataDiagnosticsPreprocessor:
 
 @app.command()
 def main(
-    input_path: Path = RAW_DATA_DIR / "heart_disease.csv",
+    input_path: Path = RAW_DATA_DIR / "heart_disease_dataset.csv",
     output_path: Path = PROCESSED_DATA_DIR / "processed_heart_disease_v0.csv",
     apply_smote: bool = False, # false par défaut pour ne pas forcer l'utilisation de SMOTE
 ) -> None:
