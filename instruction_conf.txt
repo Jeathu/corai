@@ -32,3 +32,57 @@
         - Il faut réinstaller le venv et suivre les étape de création de environnement virtuel
 
 
+
+
+
+
+
+
+
+
+
+
+# Vérifie le déséquilibre des colonnes catégorielles.
+def verifier_desequilibre(df, seuil=0.2):
+    cols_cat = df.select_dtypes(include=['object']).columns.tolist()
+    resultats = []
+
+    for col in cols_cat:
+        counts = df[col].value_counts()
+        ratio_min = counts.min() / counts.sum()
+        resultats.append({
+            'colonne': col,
+            'nb_classes': len(counts),
+            'classe_majoritaire': counts.idxmax(),
+            'classe_minoritaire': counts.idxmin(),
+            'ratio_minoritaire': f"{ratio_min:.2%}"
+        })
+    return pd.DataFrame(resultats)
+
+
+
+
+df_desequilibre = verifier_desequilibre(df_cleaned_null, seuil=0.2)
+df_desequilibre
+
+
+
+
+from imblearn.over_sampling import SMOTE
+from sklearn.model_selection import train_test_split
+
+
+
+def solution_2_smote(X, y):
+    """
+        Applique la technique SMOTE pour équilibrer les classes minoritaires
+        dans le jeu de données
+    """
+    smote = SMOTE(random_state=42)
+    X_resampled, y_resampled = smote.fit_resample(X, y)
+
+    print(f"Avant : {len(y)} échantillons")
+    print(f"Après : {len(y_resampled)} échantillons")
+    print(f"Distribution : No={sum(y_resampled=='No')}, Yes={sum(y_resampled=='Yes')}\n")
+
+    return X_resampled, y_resampled
