@@ -6,7 +6,7 @@ from pathlib import Path
 from loguru import logger
 
 
-from corai.config import PROCESSED_DATA_DIR
+from corai.config import PROCESSED_DATA_DIR, REPORTS_DIR
 
 app = typer.Typer()
 
@@ -84,8 +84,8 @@ class process_data_analytics:
 
 @app.command()
 def main(
-    input_path: Path = PROCESSED_DATA_DIR / "processed_heart_disease.csv",
-    output_path: Path = PROCESSED_DATA_DIR / "features_summary.csv",
+    input_path: Path = PROCESSED_DATA_DIR / "processed_heart_disease_v0.csv",
+    output_path: Path = REPORTS_DIR / "features_summary.csv",
 ):
     """Fonction principale pour l'analyse des données."""
     logger.info(f"Loading dataset from {input_path}...")
