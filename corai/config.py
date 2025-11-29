@@ -25,8 +25,14 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 # https://github.com/Delgan/loguru/issues/135
 try:
     from tqdm import tqdm
+    import sys
 
     logger.remove(0)
-    logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
+    # Use sys.stdout with UTF-8 encoding to avoid emoji issues on Windows
+    logger.add(
+        sys.stdout,
+        colorize=True,
+        format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+    )
 except ModuleNotFoundError:
     pass
