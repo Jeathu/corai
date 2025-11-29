@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import pytest
-from corai.preprocessing.cardiac_feature_pipeline import HeartDiseasePreprocessor
+from corai.preprocessing.feature_transformer import HeartDiseasePreprocessor
 
 class TestHeartDiseasePreprocessor:
     

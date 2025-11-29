@@ -8,7 +8,7 @@ import numpy as np
 from pathlib import Path
 import tempfile
 import pytest
-from corai.preprocessing.dataset import load_data, main
+from corai.preprocessing.data_loader import load_data, main
 
 class TestDataset:
     

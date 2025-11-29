@@ -15,18 +15,17 @@ app = typer.Typer()
 
 # Méthode pour charger les données
 def load_data(path: Path) -> pd.DataFrame:
-    logger.info(f"Loading data from {path}")
     df = pd.read_csv(path)
     if not isinstance(df, pd.DataFrame):
-        raise ValueError("Loaded data is not a pandas DataFrame")
+        raise ValueError("le fichier chargé n'est pas un DataFrame pandas")
     return df
 
 
 
 
-def split_dataset(df: pd.DataFrame, target: str = "Heart Disease Status") -> tuple[pd.DataFrame, pd.Series]:
+def split_features_target(df: pd.DataFrame, target: str = "Heart Disease Status") -> tuple[pd.DataFrame, pd.Series]:
     """
-    Sépare un DataFrame en caractéristiques (X) et cible (y)
+    Séparation le DataFrame en caractéristiques (X)features  et cible (y)
 
         Exceptions:
             KeyError: Si la colonne cible n'est pas présente dans le DataFrame
@@ -42,7 +41,6 @@ def split_dataset(df: pd.DataFrame, target: str = "Heart Disease Status") -> tup
     X = df.loc[:, df.columns != target].copy()
     y = df.loc[:, target].copy()
     return X, y
-
 
 
 
