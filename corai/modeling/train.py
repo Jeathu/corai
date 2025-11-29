@@ -94,16 +94,19 @@ class ModelTrainer:
                 verbose=1
             )
             
+            logger.info(f"Lancement de GridSearchCV avec {cv_folds} folds...")
             grid_search.fit(X_train, y_train)
             
-            # Créer un nouveau modèle avec les meilleurs paramètres
-            self.model = self.get_model()
-            self.model.set_params(**grid_search.best_params_)
+            # Créer un nouveau modèle BaseModel avec les meilleurs paramètres
+            best_params_dict = grid_search.best_params_
+            self.model = ModelFactory.create_model(self.model_type, **best_params_dict)
+            
+            # Entraîner le modèle avec les meilleurs paramètres
             self.model.fit(X_train, y_train)
             
-            self.best_params = grid_search.best_params_
+            self.best_params = best_params_dict
             
-            logger.info(f"Meilleurs paramètres: {self.best_params}")
+            logger.info(f"Meilleurs paramètres trouvés: {self.best_params}")
             logger.info(f"Meilleur score CV: {grid_search.best_score_:.4f}")
         else:
             self.model = self.get_model()
