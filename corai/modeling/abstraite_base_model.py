@@ -10,9 +10,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, Optional, Tuple
 
-import sys
-sys.path.append(str(Path(__file__).parent.parent))
-from config import MODELS_DIR
+from corai.config import MODELS_DIR
 
 
 class BaseModel(ABC):

@@ -198,3 +198,6 @@ reports/demo_results/
 
 #Models
 models/*
+
+#Logs
+COMPLETION_REPORT.txt

@@ -13,7 +13,10 @@ from sklearn.model_selection import train_test_split
 from loguru import logger
 import typer
 
-from corai.config import RAW_DATA_DIR, PROCESSED_DATA_DIR, MODELS_DIR, REPORTS_DIR
+from corai.config import (
+    RAW_DATA_DIR, PROCESSED_DATA_DIR, MODELS_DIR, REPORTS_DIR,
+    DEFAULT_MODEL_TYPE, DEFAULT_TEST_SIZE, DEFAULT_RANDOM_STATE, DEFAULT_CV_FOLDS, TARGET_COLUMN
+)
 from corai.preprocessing.data_loader import load_data, split_features_target
 from corai.preprocessing.preprocessing_pipeline import DataDiagnosticsPreprocessor
 from corai.modeling.train import ModelTrainer
@@ -28,23 +31,23 @@ class CompletePipeline:
     def __init__(
         self,
         raw_data_path: Path,
-        model_type: str = "random_forest",
-        test_size: float = 0.2,
-        random_state: int = 42
+        model_type: str = None,
+        test_size: float = None,
+        random_state: int = None
     ):
         """
         Initialise le pipeline complet.
         
         Args:
             raw_data_path: Chemin vers les données brutes
-            model_type: Type de modèle à entraîner
-            test_size: Proportion des données pour le test
-            random_state: Graine aléatoire pour la reproductibilité
+            model_type: Type de modèle à entraîner (None = utilise DEFAULT_MODEL_TYPE)
+            test_size: Proportion des données pour le test (None = utilise DEFAULT_TEST_SIZE)
+            random_state: Graine aléatoire (None = utilise DEFAULT_RANDOM_STATE)
         """
         self.raw_data_path = raw_data_path
-        self.model_type = model_type
-        self.test_size = test_size
-        self.random_state = random_state
+        self.model_type = model_type or DEFAULT_MODEL_TYPE
+        self.test_size = test_size or DEFAULT_TEST_SIZE
+        self.random_state = random_state or DEFAULT_RANDOM_STATE
         
         # Données
         self.df_raw: Optional[pd.DataFrame] = None
@@ -75,7 +78,7 @@ class CompletePipeline:
         logger.info("=" * 80)
         
         # Créer le pipeline de prétraitement
-        pipeline = DataDiagnosticsPreprocessor(target_column="Heart Disease")
+        pipeline = DataDiagnosticsPreprocessor(target_column=TARGET_COLUMN)
         
         # Charger les données
         logger.info(f"Chargement depuis: {self.raw_data_path}")
@@ -97,7 +100,7 @@ class CompletePipeline:
         
         # Combiner en un seul DataFrame
         self.df_processed = X_transformed.copy()
-        self.df_processed["Heart Disease"] = y_transformed
+        self.df_processed[TARGET_COLUMN] = y_transformed
         
         logger.success(f"Données prétraitées: {self.df_processed.shape}")
         
@@ -116,7 +119,7 @@ class CompletePipeline:
         logger.info("=" * 80)
         
         # Séparer features et target
-        X, y = split_features_target(self.df_processed, target="Heart Disease")
+        X, y = split_features_target(self.df_processed, target=TARGET_COLUMN)
         
         # Split train/test
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
@@ -144,7 +147,7 @@ class CompletePipeline:
         
         logger.success("Datasets train/test sauvegardés")
 
-    def step3_train_model(self, use_grid_search: bool = False, cv_folds: int = 5):
+    def step3_train_model(self, use_grid_search: bool = False, cv_folds: int = None):
         """
         Étape 3: Entraîner le modèle.
         
@@ -155,6 +158,8 @@ class CompletePipeline:
         logger.info("=" * 80)
         logger.info("ÉTAPE 3: ENTRAÎNEMENT DU MODÈLE")
         logger.info("=" * 80)
+        
+        cv_folds = cv_folds or DEFAULT_CV_FOLDS
         
         self.trainer = ModelTrainer(
             model_type=self.model_type,
@@ -232,7 +237,7 @@ class CompletePipeline:
     def run_complete_pipeline(
         self,
         use_grid_search: bool = False,
-        cv_folds: int = 5
+        cv_folds: int = None
     ) -> Dict[str, Any]:
         """
         Execute le pipeline complet.
@@ -281,22 +286,22 @@ class CompletePipeline:
 @app.command()
 def main(
     raw_data_path: Path = RAW_DATA_DIR / "heart_disease_dataset.csv",
-    model_type: str = "random_forest",
-    test_size: float = 0.2,
+    model_type: str = None,
+    test_size: float = None,
     use_grid_search: bool = False,
-    cv_folds: int = 5,
-    random_state: int = 42,
+    cv_folds: int = None,
+    random_state: int = None,
 ):
     """
     Execute le pipeline complet de bout en bout.
     
     Args:
         raw_data_path: Chemin vers les données brutes
-        model_type: Type de modèle ('random_forest', 'gradient_boosting', 'logistic_regression', 'svm')
-        test_size: Proportion des données pour le test
+        model_type: Type de modèle (None = utilise DEFAULT_MODEL_TYPE)
+        test_size: Proportion des données pour le test (None = utilise DEFAULT_TEST_SIZE)
         use_grid_search: Utiliser GridSearchCV pour optimiser les hyperparamètres
-        cv_folds: Nombre de folds pour la validation croisée
-        random_state: Graine aléatoire
+        cv_folds: Nombre de folds pour la validation croisée (None = utilise DEFAULT_CV_FOLDS)
+        random_state: Graine aléatoire (None = utilise DEFAULT_RANDOM_STATE)
     """
     pipeline = CompletePipeline(
         raw_data_path=raw_data_path,

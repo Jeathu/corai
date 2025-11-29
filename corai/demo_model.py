@@ -5,6 +5,7 @@ Charge le modèle déjà entraîné et fait des prédictions sur les données tr
 
 from pathlib import Path
 import pickle
+import joblib
 
 import pandas as pd
 import numpy as np
@@ -13,7 +14,10 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from loguru import logger
 import typer
 
-from corai.config import PROCESSED_DATA_DIR, MODELS_DIR, REPORTS_DIR
+from corai.config import (
+    PROCESSED_DATA_DIR, MODELS_DIR, REPORTS_DIR,
+    DEFAULT_TEST_SIZE, DEFAULT_RANDOM_STATE, TARGET_COLUMN
+)
 from corai.preprocessing.data_loader import load_data, split_features_target
 from corai.modeling.evaluate import ModelEvaluator
 
@@ -24,8 +28,8 @@ app = typer.Typer()
 def demo(
     data_path: Path = PROCESSED_DATA_DIR / "processed_heart_disease_v0.csv",
     model_path: Path = MODELS_DIR / "heart_disease_model.pkl",
-    test_size: float = 0.2,
-    random_state: int = 42,
+    test_size: float = None,
+    random_state: int = None,
 ):
     """
     Démonstration simple: charge le modèle existant et fait des prédictions.
@@ -33,9 +37,12 @@ def demo(
     Args:
         data_path: Chemin vers les données prétraitées
         model_path: Chemin vers le modèle entraîné
-        test_size: Proportion pour le test
-        random_state: Graine aléatoire
+        test_size: Proportion pour le test (None = utilise DEFAULT_TEST_SIZE)
+        random_state: Graine aléatoire (None = utilise DEFAULT_RANDOM_STATE)
     """
+    test_size = test_size or DEFAULT_TEST_SIZE
+    random_state = random_state or DEFAULT_RANDOM_STATE
+    
     logger.info("=" * 80)
     logger.info("🎬 DÉMONSTRATION DU MODÈLE EXISTANT")
     logger.info("=" * 80)
@@ -47,7 +54,7 @@ def demo(
     
     # 2. Séparer features et target
     logger.info("Séparation features/target...")
-    X, y = split_features_target(df, target="Heart Disease")
+    X, y = split_features_target(df, target=TARGET_COLUMN)
     logger.info(f"Features: {X.shape}, Target: {y.shape}")
     
     # 3. Split train/test
@@ -65,16 +72,37 @@ def demo(
         logger.info("Exécutez d'abord: python -m corai.modeling.train")
         return
     
-    with open(model_path, "rb") as f:
-        model_data = pickle.load(f)
+    # Essayer de charger avec joblib d'abord (nouveau format BaseModel)
+    try:
+        model_data = joblib.load(model_path)
+        
+        # Format BaseModel: dict avec 'model', 'metadata', 'model_type'
+        if isinstance(model_data, dict) and 'model' in model_data:
+            model = model_data['model']
+            model_type = model_data.get('model_type', 'unknown')
+            metadata = model_data.get('metadata', {})
+            logger.info(f"Modèle BaseModel chargé: {model_type} (entraîné le {metadata.get('training_date', 'N/A')})")
+        else:
+            model = model_data
+            logger.info("Modèle sklearn chargé (joblib)")
     
-    if isinstance(model_data, dict):
-        model = model_data.get("model")
-        model_type = model_data.get("model_type", "unknown")
-        logger.info(f"Modèle chargé: {model_type}")
-    else:
-        model = model_data
-        logger.info("Modèle chargé (format ancien)")
+    except Exception as e_joblib:
+        # Essayer pickle (ancien format)
+        logger.debug(f"Erreur joblib: {e_joblib}, tentative avec pickle...")
+        try:
+            with open(model_path, "rb") as f:
+                model_data = pickle.load(f)
+            
+            if isinstance(model_data, dict):
+                model = model_data.get("model")
+                model_type = model_data.get("model_type", "unknown")
+                logger.info(f"Modèle chargé (pickle): {model_type}")
+            else:
+                model = model_data
+                logger.info("Modèle chargé (format ancien pickle)")
+        except Exception as e_pickle:
+            logger.error(f"Impossible de charger le modèle avec joblib ou pickle")
+            raise RuntimeError(f"Erreur de chargement: joblib={e_joblib}, pickle={e_pickle}")
     
     # 5. Faire des prédictions
     logger.info("Prédiction sur le test set...")

@@ -21,6 +21,15 @@ MODELS_DIR = PROJ_ROOT / "models"
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
+# Model Configuration
+DEFAULT_MODEL_TYPE = "random_forest"  # Options: random_forest, gradient_boosting, logistic_regression, svm
+DEFAULT_RANDOM_STATE = 42
+DEFAULT_TEST_SIZE = 0.2
+DEFAULT_CV_FOLDS = 5
+
+# Target column name
+TARGET_COLUMN = "Heart Disease"
+
 # If tqdm is installed, configure loguru with tqdm.write
 # https://github.com/Delgan/loguru/issues/135
 try:

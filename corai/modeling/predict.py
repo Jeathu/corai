@@ -5,6 +5,7 @@ Module de prédiction avec les modèles entraînés.
 from pathlib import Path
 from typing import Optional, Dict, Any
 import pickle
+import joblib
 
 import pandas as pd
 import numpy as np
@@ -34,25 +35,55 @@ class ModelPredictor:
         self.load_model()
 
     def load_model(self):
-        """Charge le modèle depuis le fichier pickle."""
+        """Charge le modèle depuis le fichier pickle ou joblib."""
         if not self.model_path.exists():
             raise FileNotFoundError(f"Modèle non trouvé: {self.model_path}")
         
         logger.info(f"Chargement du modèle depuis: {self.model_path}")
         
-        with open(self.model_path, "rb") as f:
-            model_data = pickle.load(f)
+        # Essayer de charger avec joblib d'abord (nouveau format BaseModel)
+        try:
+            model_data = joblib.load(self.model_path)
+            
+            # Format BaseModel: dict avec 'model', 'metadata', 'model_type'
+            if isinstance(model_data, dict) and 'model' in model_data:
+                self.model = model_data['model']
+                self.model_type = model_data.get('model_type')
+                metadata = model_data.get('metadata', {})
+                self.model_metadata = {
+                    'training_date': metadata.get('training_date'),
+                    'training_duration': metadata.get('training_duration'),
+                    'n_samples': metadata.get('n_samples'),
+                    'feature_names': metadata.get('feature_names'),
+                    'best_params': model_data.get('best_params'),
+                    'cv_scores': model_data.get('cv_scores')
+                }
+                logger.info(f"Modèle BaseModel chargé (entraîné le {metadata.get('training_date', 'N/A')})")
+            else:
+                # Ancien format: juste le modèle sklearn
+                self.model = model_data
+                logger.info("Ancien format de modèle détecté")
         
-        if isinstance(model_data, dict):
-            self.model = model_data.get("model")
-            self.model_type = model_data.get("model_type")
-            self.model_metadata = {
-                "best_params": model_data.get("best_params"),
-                "cv_scores": model_data.get("cv_scores")
-            }
-        else:
-            # Ancien format: juste le modèle
-            self.model = model_data
+        except Exception as e_joblib:
+            # Essayer pickle (ancien format)
+            logger.debug(f"Erreur joblib: {e_joblib}, tentative avec pickle...")
+            try:
+                with open(self.model_path, "rb") as f:
+                    model_data = pickle.load(f)
+                
+                if isinstance(model_data, dict):
+                    self.model = model_data.get("model")
+                    self.model_type = model_data.get("model_type")
+                    self.model_metadata = {
+                        "best_params": model_data.get("best_params"),
+                        "cv_scores": model_data.get("cv_scores")
+                    }
+                else:
+                    # Ancien format: juste le modèle
+                    self.model = model_data
+            except Exception as e_pickle:
+                logger.error(f"Impossible de charger le modèle avec joblib ou pickle")
+                raise RuntimeError(f"Erreur de chargement: joblib={e_joblib}, pickle={e_pickle}")
         
         logger.success(f"Modèle chargé avec succès (type: {self.model_type})")
 
