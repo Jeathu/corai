@@ -24,9 +24,12 @@ from sklearn.metrics import (
 from loguru import logger
 import typer
 
+
 from corai.config import MODELS_DIR, PROCESSED_DATA_DIR, REPORTS_DIR
 
 app = typer.Typer()
+
+
 
 
 class ModelEvaluator:
@@ -178,32 +181,32 @@ def evaluate_model(
 ) -> Dict[str, Any]:
     """
     Évalue un modèle et retourne les métriques.
-    
+
     Args:
         y_true: Vraies valeurs/étiquettes
         y_pred: Prédictions du modèle
         y_proba: Probabilités prédites (pour classification)
         task_type: Type de tâche ('classification' ou 'regression')
         output_path: Chemin optionnel pour sauvegarder les métriques
-    
+
     Returns:
         Dictionnaire des métriques
     """
     evaluator = ModelEvaluator(task_type=task_type)
-    
+
     if task_type == "classification":
         metrics = evaluator.evaluate_classification(y_true, y_pred, y_proba)
     elif task_type == "regression":
         metrics = evaluator.evaluate_regression(y_true, y_pred)
     else:
         raise ValueError(f"Type de tâche non supporté: {task_type}")
-    
     evaluator.print_metrics()
-    
+
     if output_path:
         evaluator.save_metrics(output_path)
-    
     return metrics
+
+
 
 
 @app.command()
@@ -216,7 +219,7 @@ def main(
 ) -> None:
     """
     Évalue un modèle à partir d'un fichier de prédictions.
-    
+
     Args:
         predictions_path: Chemin vers le fichier des prédictions (doit contenir 'predictions' et 'actual')
         metrics_output: Chemin de sortie pour les métriques
@@ -225,27 +228,27 @@ def main(
         actual_col: Nom de la colonne des vraies valeurs
     """
     logger.info("Chargement des données...")
-    
+
     # Charger les prédictions
     predictions_df = pd.read_csv(predictions_path)
-    
+
     # Vérifier que les colonnes nécessaires existent
     if predictions_col not in predictions_df.columns:
         raise ValueError(f"Colonne '{predictions_col}' non trouvée dans {predictions_path}")
-    
+
     if actual_col not in predictions_df.columns:
         raise ValueError(f"Colonne '{actual_col}' non trouvée dans {predictions_path}. "
                         f"Colonnes disponibles: {list(predictions_df.columns)}")
-    
+
     y_pred = predictions_df[predictions_col].values
     y_true = predictions_df[actual_col].values
-    
+
     # Probabilités si disponibles
     y_proba = None
     proba_cols = [col for col in predictions_df.columns if col.startswith("proba_")]
     if proba_cols:
         y_proba = predictions_df[proba_cols].values
-    
+
     # Évaluer le modèle
     evaluate_model(
         y_true=y_true,
@@ -254,8 +257,9 @@ def main(
         task_type=task_type,
         output_path=metrics_output
     )
-    
     typer.echo(f"Évaluation terminée. Métriques sauvegardées: {metrics_output}")
+
+
 
 
 if __name__ == "__main__":

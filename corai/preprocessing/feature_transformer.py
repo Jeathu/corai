@@ -4,6 +4,8 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
+
+
 class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
     """
     Préprocesseur pour les données de maladies cardiaques.
@@ -32,7 +34,6 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
 
 
-
     def _detecter_colonnes(self, df: pd.DataFrame) -> None:
         """Détecte les colonnes numériques et catégorielles automatiquement."""
         cols_numeriques = list(df.select_dtypes(include=["int64", "float64"]).columns)
@@ -45,8 +46,6 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
         self.numerical_columns = cols_numeriques
         self.categorical_columns = cols_categorielles
-
-
 
 
 
@@ -81,7 +80,6 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
 
 
-
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         if not self._fitted:
             raise RuntimeError("Le préprocesseur doit être ajusté avant transform().")
@@ -110,7 +108,6 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
                 result.loc[mask, self.target_column] = df.loc[mask, self.target_column]
 
         return result
-
 
 
 

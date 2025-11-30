@@ -19,17 +19,23 @@ class SVM(BaseModel):
     def __init__(self, **kwargs):
         """
         Initialise le modèle SVM
-        
+
         Args:
             **kwargs: Hyperparamètres (C, kernel, gamma, etc.)
         """
         super().__init__(name="SVM", **kwargs)
+
+
+
 
     def _initialize_model(self):
         """Initialise le modèle sklearn"""
         params = self.get_default_params()
         params.update(self.hyperparameters)
         self.model = SKLearnSVC(**params)
+
+
+
 
     def get_default_params(self) -> Dict[str, Any]:
         """Retourne les hyperparamètres par défaut"""

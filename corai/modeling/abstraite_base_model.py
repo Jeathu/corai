@@ -37,7 +37,7 @@ class BaseModel(ABC):
 
     @abstractmethod
     def _initialize_model(self):
-        """Initialise le modèle sklearn - À implémenter par chaque sous-classe"""
+        """Initialise le modèle sklearn - à implémenter par chaque sous-classe"""
         pass
 
 
@@ -159,7 +159,7 @@ class BaseModel(ABC):
         if filepath is None:
             filepath = self.models_dir / f"{self.name}_v{version}.joblib"
 
-        # Sauvegarder le modèle et ses métadonnées
+        # Sauvegarder le modèle et métadonnées
         model_data = {
             'model': self.model,
             'name': self.name,

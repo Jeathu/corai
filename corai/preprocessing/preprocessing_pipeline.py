@@ -37,6 +37,7 @@ class DataDiagnosticsPreprocessor:
 
 
 
+
     def remove_duplicates(self) -> int:
         """Supprime les lignes dupliquées du DataFrame."""
         if self.df is None:
@@ -47,6 +48,7 @@ class DataDiagnosticsPreprocessor:
         after = self.df.shape[0]
         removed = before - after
         return removed
+
 
 
 

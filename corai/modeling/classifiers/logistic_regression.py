@@ -19,17 +19,23 @@ class LogisticRegression(BaseModel):
     def __init__(self, **kwargs):
         """
         Initialise le modèle Logistic Regression
-        
+
         Args:
             **kwargs: Hyperparamètres (C, penalty, solver, max_iter, etc.)
         """
         super().__init__(name="LogisticRegression", **kwargs)
+
+
+
 
     def _initialize_model(self):
         """Initialise le modèle sklearn"""
         params = self.get_default_params()
         params.update(self.hyperparameters)
         self.model = SKLearnLogisticRegression(**params)
+
+
+
 
     def get_default_params(self) -> Dict[str, Any]:
         """Retourne les hyperparamètres par défaut"""

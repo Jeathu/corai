@@ -42,7 +42,6 @@ class VisualisateurMatplotlib:
 
 
 
-
     # Crée un histogramme pour la distribution d'une colonne numérique
     def tracer_distribution_numerique(self, colonne: str) -> plt.Figure:
         logger.info(f"Création du graphique de distribution pour {colonne}...")
@@ -192,7 +191,7 @@ class VisualisateurMatplotlib:
         table_data.append(['Colonne'] + list(stats.columns))
         for idx, row in stats.iterrows():
             table_data.append([idx] + [str(val) for val in row.values])
-        
+
         table = ax.table(cellText=table_data, cellLoc='center', loc='center',
                         colWidths=[0.15] * len(table_data[0]))
         table.auto_set_font_size(False)
@@ -219,13 +218,13 @@ class VisualisateurMatplotlib:
 
         colonnes = self.numerical_cols[:4]
         n = len(colonnes)
-        
+
         fig, axes = plt.subplots(n, n, figsize=(14, 12))
-        
+
         for i, col_y in enumerate(colonnes):
             for j, col_x in enumerate(colonnes):
                 ax = axes[i, j]
-                
+
                 if i == j:
                     # Diagonale : histogramme
                     ax.hist(self.df[col_x], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
@@ -305,7 +304,7 @@ class VisualisateurMatplotlib:
     def _generer_rapport_html(self, chemin_sortie: Path):
         """Génère un rapport HTML avec les images PNG."""
         images = sorted([f for f in chemin_sortie.parent.glob("*.png")])
-        
+
         contenu_html = """
         <!DOCTYPE html>
         <html>
