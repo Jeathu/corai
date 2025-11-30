@@ -8,9 +8,12 @@ import numpy as np
 import joblib
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, Optional
+
 
 from corai.config import MODELS_DIR
+
+
 
 
 class BaseModel(ABC):
@@ -20,13 +23,6 @@ class BaseModel(ABC):
     """
 
     def __init__(self, name: str, **kwargs):
-        """
-        Initialise le modèle de base
-        
-        Args:
-            name: Nom du modèle
-            **kwargs: Hyperparamètres du modèle
-        """
         self.name = name
         self.model = None
         self.is_trained = False
@@ -34,9 +30,8 @@ class BaseModel(ABC):
         self.training_metadata = {}
         self.models_dir = MODELS_DIR
         self.models_dir.mkdir(parents=True, exist_ok=True)
-
-        # Initialiser le modèle sklearn
         self._initialize_model()
+
 
 
 
@@ -47,6 +42,7 @@ class BaseModel(ABC):
 
 
 
+
     @abstractmethod
     def get_default_params(self) -> Dict[str, Any]:
         """Retourne les hyperparamètres par défaut - À implémenter"""
@@ -54,23 +50,24 @@ class BaseModel(ABC):
 
 
 
+
     def fit(self, X_train: pd.DataFrame, y_train: pd.Series) -> 'BaseModel':
         """
         Entraîne le modèle
-        
+
         Args:
             X_train: Features d'entraînement
             y_train: Labels d'entraînement
-            
+
         Returns:
             self
         """
-        print(f"🔄 Entraînement: {self.name}...")
-        
+        print(f"Entraînement: {self.name}...")
+
         start_time = datetime.now()
         self.model.fit(X_train, y_train)
         end_time = datetime.now()
-        
+
         self.is_trained = True
         self.training_metadata = {
             'training_date': start_time.isoformat(),
@@ -79,30 +76,36 @@ class BaseModel(ABC):
             'n_features': X_train.shape[1],
             'feature_names': list(X_train.columns)
         }
-        
-        print(f"   ✅ {self.name} entraîné en {self.training_metadata['training_duration_seconds']:.2f}s")
+
+        print(f"{self.name} entraîné en {self.training_metadata['training_duration_seconds']:.2f}s")
         return self
-    
+
+
+
+
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         """
         Effectue des prédictions
-        
+
         Args:
             X: Features
-            
+
         Returns:
             Prédictions
         """
         self._check_is_trained()
         return self.model.predict(X)
-    
+
+
+
+
     def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
         """
         Retourne les probabilités de prédiction
-        
+
         Args:
             X: Features
-            
+
         Returns:
             Probabilités [P(classe_0), P(classe_1)]
         """
@@ -111,42 +114,51 @@ class BaseModel(ABC):
             return self.model.predict_proba(X)
         else:
             raise NotImplementedError(f"{self.name} ne supporte pas predict_proba")
-    
+
+
+
+
     def _check_is_trained(self):
         """Vérifie que le modèle est entraîné"""
         if not self.is_trained:
             raise RuntimeError(f"Le modèle {self.name} n'est pas encore entraîné. Appelez fit() d'abord.")
-    
+
+
+
+
     def get_params(self) -> Dict[str, Any]:
         """Retourne les hyperparamètres actuels"""
         return self.model.get_params() if self.model else self.hyperparameters
-    
+
+
+
+
     def set_params(self, **params):
         """Met à jour les hyperparamètres"""
         if self.model:
             self.model.set_params(**params)
         self.hyperparameters.update(params)
         return self
-    
+
+
+
+
     def save(self, version: str = None, filepath: Path = None) -> Path:
         """
         Sauvegarde le modèle
-        
-        Args:
-            version: Version du modèle
-            filepath: Chemin personnalisé (optionnel)
-            
-        Returns:
-            Chemin du fichier sauvegardé
+            Args:
+               version: Version du modèle
+               filepath: Chemin personnalisé (optionnel)
+            Returns:
+               Chemin du fichier sauvegardé
         """
         self._check_is_trained()
-        
         if version is None:
             version = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
+
         if filepath is None:
             filepath = self.models_dir / f"{self.name}_v{version}.joblib"
-        
+
         # Sauvegarder le modèle et ses métadonnées
         model_data = {
             'model': self.model,
@@ -155,26 +167,25 @@ class BaseModel(ABC):
             'training_metadata': self.training_metadata,
             'is_trained': self.is_trained
         }
-        
         joblib.dump(model_data, filepath)
-        print(f"💾 Modèle sauvegardé: {filepath}")
-        
+        print(f"Modèle sauvegardé: {filepath}")
         return filepath
-    
+
+
+
+
     @classmethod
     def load(cls, filepath: Path) -> 'BaseModel':
         """
         Charge un modèle depuis un fichier
-        
-        Args:
-            filepath: Chemin du fichier
-            
-        Returns:
-            Instance du modèle
+            Args:
+               filepath: Chemin du fichier
+            Returns:
+               Instance du modèle
         """
-        print(f"📂 Chargement: {filepath}")
+        print(f"Chargement: {filepath}")
         model_data = joblib.load(filepath)
-        
+
         # Créer une nouvelle instance
         instance = cls.__new__(cls)
         instance.model = model_data['model']
@@ -183,18 +194,19 @@ class BaseModel(ABC):
         instance.training_metadata = model_data['training_metadata']
         instance.is_trained = model_data['is_trained']
         instance.models_dir = MODELS_DIR
-        
         return instance
-    
+
+
+
+
     def get_feature_importance(self) -> Optional[pd.Series]:
         """
         Retourne l'importance des features (si disponible)
-        
-        Returns:
-            Series avec l'importance des features ou None
+            Returns:
+               Series avec l'importance des features ou None
         """
+
         self._check_is_trained()
-        
         if hasattr(self.model, 'feature_importances_'):
             feature_names = self.training_metadata.get('feature_names', [])
             return pd.Series(
@@ -209,10 +221,17 @@ class BaseModel(ABC):
             ).sort_values(ascending=False)
         else:
             return None
-    
+
+
+
+
+
     def __repr__(self) -> str:
-        status = "✅ Entraîné" if self.is_trained else "⏳ Non entraîné"
+        status = "Entraîné" if self.is_trained else "⏳ Non entraîné"
         return f"{self.name} ({status})"
-    
+
+
+
+
     def __str__(self) -> str:
         return self.__repr__()

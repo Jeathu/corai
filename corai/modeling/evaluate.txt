@@ -208,43 +208,35 @@ def evaluate_model(
 
 @app.command()
 def main(
-    predictions_path: Path = MODELS_DIR / "predictions/test_predictions.csv",
+    predictions_path: Path = PROCESSED_DATA_DIR / "test_predictions.csv",
+    labels_path: Path = PROCESSED_DATA_DIR / "test_labels.csv",
     metrics_output: Path = REPORTS_DIR / "evaluation_metrics.json",
     task_type: str = "classification",
-    predictions_col: str = "predictions",
-    actual_col: str = "actual",
 ) -> None:
     """
-    Évalue un modèle à partir d'un fichier de prédictions.
+    Évalue un modèle à partir de fichiers de prédictions et d'étiquettes.
     
     Args:
-        predictions_path: Chemin vers le fichier des prédictions (doit contenir 'predictions' et 'actual')
+        predictions_path: Chemin vers le fichier des prédictions
+        labels_path: Chemin vers le fichier des vraies étiquettes
         metrics_output: Chemin de sortie pour les métriques
         task_type: Type de tâche ('classification' ou 'regression')
-        predictions_col: Nom de la colonne des prédictions
-        actual_col: Nom de la colonne des vraies valeurs
     """
     logger.info("Chargement des données...")
     
-    # Charger les prédictions
+    # Charger les prédictions et les vraies valeurs
     predictions_df = pd.read_csv(predictions_path)
+    labels_df = pd.read_csv(labels_path)
     
-    # Vérifier que les colonnes nécessaires existent
-    if predictions_col not in predictions_df.columns:
-        raise ValueError(f"Colonne '{predictions_col}' non trouvée dans {predictions_path}")
-    
-    if actual_col not in predictions_df.columns:
-        raise ValueError(f"Colonne '{actual_col}' non trouvée dans {predictions_path}. "
-                        f"Colonnes disponibles: {list(predictions_df.columns)}")
-    
-    y_pred = predictions_df[predictions_col].values
-    y_true = predictions_df[actual_col].values
+    y_true = labels_df.values.ravel()
+    y_pred = predictions_df["predictions"].values if "predictions" in predictions_df.columns else predictions_df.values.ravel()
     
     # Probabilités si disponibles
     y_proba = None
-    proba_cols = [col for col in predictions_df.columns if col.startswith("proba_")]
-    if proba_cols:
-        y_proba = predictions_df[proba_cols].values
+    if "probabilities" in predictions_df.columns or "proba_0" in predictions_df.columns:
+        proba_cols = [col for col in predictions_df.columns if col.startswith("proba_")]
+        if proba_cols:
+            y_proba = predictions_df[proba_cols].values
     
     # Évaluer le modèle
     evaluate_model(
@@ -255,7 +247,7 @@ def main(
         output_path=metrics_output
     )
     
-    typer.echo(f"Évaluation terminée. Métriques sauvegardées: {metrics_output}")
+    typer.echo(f"Évaluation terminée. Métriques: {metrics_output}")
 
 
 if __name__ == "__main__":

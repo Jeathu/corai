@@ -133,8 +133,7 @@ class ModelPredictor:
         predictions: np.ndarray,
         output_path: Path,
         probabilities: Optional[np.ndarray] = None,
-        include_features: Optional[pd.DataFrame] = None,
-        y_true: Optional[np.ndarray] = None
+        include_features: Optional[pd.DataFrame] = None
     ):
         """
         Sauvegarde les prédictions dans un fichier CSV.
@@ -161,10 +160,7 @@ class ModelPredictor:
             n_classes = probabilities.shape[1]
             for i in range(n_classes):
                 result_df[f"proba_{i}"] = probabilities[:, i]
-
-        if y_true is not None:
-            result_df["actual"] = y_true
-
+        
         result_df.to_csv(output_path, index=False)
         logger.success(f"Prédictions sauvegardées: {output_path}")
 
@@ -175,7 +171,6 @@ def predict_from_file(
     output_path: Path,
     include_probabilities: bool = True,
     save_features: bool = False,
-    target_column: str = "Heart Disease"
 ) -> pd.DataFrame:
     """
     Fait des prédictions à partir de fichiers.
@@ -186,22 +181,13 @@ def predict_from_file(
         output_path: Chemin de sortie
         include_probabilities: Inclure les probabilités
         save_features: Sauvegarder aussi les features dans le fichier
-        target_column: Nom de la colonne cible à exclure des features
+    
     Returns:
         DataFrame avec les prédictions
     """
     # Charger les données
     logger.info("Chargement des données...")
-    df = load_data(data_path)
-
-    # Séparer les features de la cible si elle existe
-    y_true = None
-    if target_column in df.columns:
-        logger.info(f"Suppression de la colonne cible '{target_column}' des features")
-        y_true = df[target_column].copy()
-        X = df.drop(columns=[target_column])
-    else:
-        X = df
+    X = load_data(data_path)
     
     # Créer le prédicteur
     predictor = ModelPredictor(model_path)
@@ -209,7 +195,7 @@ def predict_from_file(
     # Faire les prédictions
     predictions = predictor.predict(X)
     
-    # Calculer les probabilités 
+    # Calculer les probabilités si demandé
     probabilities = None
     if include_probabilities:
         probabilities = predictor.predict_proba(X)
@@ -220,8 +206,7 @@ def predict_from_file(
         predictions=predictions,
         output_path=output_path,
         probabilities=probabilities,
-        include_features=features_to_save,
-        y_true=y_true.values if y_true is not None else None
+        include_features=features_to_save
     )
     
     # Retourner un DataFrame avec les résultats
@@ -229,22 +214,17 @@ def predict_from_file(
     if probabilities is not None:
         for i in range(probabilities.shape[1]):
             result_df[f"proba_{i}"] = probabilities[:, i]
-
-    # Inclure la vérité terrain si disponible
-    if y_true is not None:
-        result_df["actual"] = y_true.values
-
+    
     return result_df
 
 
 @app.command()
 def main(
     model_path: Path = MODELS_DIR / "heart_disease_model.pkl",
-    data_path: Path = PROCESSED_DATA_DIR / "processed_heart_disease_v0.csv",
-    predictions_output: Path = MODELS_DIR / "predictions/test_predictions.csv",
+    data_path: Path = PROCESSED_DATA_DIR / "test_features.csv",
+    predictions_output: Path = PROCESSED_DATA_DIR / "test_predictions.csv",
     include_probabilities: bool = True,
     save_features: bool = False,
-    target_column: str = "Heart Disease",
 ):
     """
     Fait des prédictions avec un modèle entraîné.
@@ -261,8 +241,7 @@ def main(
         data_path=data_path,
         output_path=predictions_output,
         include_probabilities=include_probabilities,
-        save_features=save_features,
-        target_column=target_column,
+        save_features=save_features
     )
     
     logger.success("Prédictions terminées avec succès!")
