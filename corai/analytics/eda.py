@@ -31,7 +31,6 @@ class ExploratoryDataAnalysis:
 
 
 
-
     def basic_info(self) -> Dict[str, Any]:
         """Retourne les informations de base du dataset."""
         info = {
@@ -42,7 +41,6 @@ class ExploratoryDataAnalysis:
         }
         self.report["basic_info"] = info
         return info
-
 
 
 
@@ -60,7 +58,6 @@ class ExploratoryDataAnalysis:
 
 
 
-
     def duplicates_info(self) -> Dict[str, Any]:
         """Analyse les doublons."""
         dup_info = {
@@ -69,7 +66,6 @@ class ExploratoryDataAnalysis:
         }
         self.report["duplicates"] = dup_info
         return dup_info
-
 
 
 
@@ -86,7 +82,6 @@ class ExploratoryDataAnalysis:
 
 
 
-
     def categorical_summary(self) -> Dict[str, pd.Series]:
         """Analyse des colonnes catégorielles."""
         cat_df = self.df.select_dtypes(include=["object", "category"])
@@ -100,7 +95,6 @@ class ExploratoryDataAnalysis:
 
         self.report["categorical_summary"] = cat_summary
         return cat_summary
-
 
 
 
@@ -130,7 +124,6 @@ class ExploratoryDataAnalysis:
 
 
 
-
     def generate_full_report(self) -> Dict[str, Any]:
         """Génère un rapport complet d'analyse exploratoire."""
         logger.info("Génération du rapport d'analyse exploratoire...")
@@ -144,7 +137,6 @@ class ExploratoryDataAnalysis:
 
         logger.success("Rapport d'analyse exploratoire généré avec succès")
         return self.report
-
 
 
 
@@ -196,7 +188,6 @@ class ExploratoryDataAnalysis:
                     f.write(counts.to_string())
                     f.write("\n")
         logger.success(f"Rapport sauvegardé: {output_path}")
-
 
 
 

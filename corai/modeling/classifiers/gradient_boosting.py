@@ -29,13 +29,11 @@ class GradientBoosting(BaseModel):
 
 
 
-
     def _initialize_model(self):
         """Initialise le modèle sklearn"""
         params = self.get_default_params()
         params.update(self.hyperparameters)
         self.model = SKLearnGradientBoosting(**params)
-
 
 
 

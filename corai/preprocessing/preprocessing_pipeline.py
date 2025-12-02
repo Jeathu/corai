@@ -5,7 +5,7 @@ import pandas as pd
 import typer
 
 from corai.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
-from corai.preprocessing.data_loader import load_data
+from corai.preprocessing.data_loader import load_data, duplicate_dataframe, split_features_target
 from corai.preprocessing.feature_transformer import HeartDiseasePreprocessor
 
 
@@ -19,14 +19,12 @@ class DataDiagnosticsPreprocessor:
     """
 
 
-
     def __init__(self, target_column: str = "Heart Disease"):
         self.target_column = target_column
-        self.preprocessor = HeartDiseasePreprocessor(target_column=self.target_column)
+        self.preprocessor = HeartDiseasePreprocessor()
         self.df: Optional[pd.DataFrame] = None
         self.X_transformed: Optional[pd.DataFrame] = None
         self.y_arr: Optional[pd.Series] = None
-
 
 
 
@@ -37,18 +35,19 @@ class DataDiagnosticsPreprocessor:
 
 
 
-
     def remove_duplicates(self) -> int:
-        """Supprime les lignes dupliquées du DataFrame."""
+        """ 
+        Wrapper: Supprime les lignes dupliquées du DataFrame en appelant 
+        la fonction duplicate_dataframe (data_loder.py).
+        """
         if self.df is None:
             raise RuntimeError("Data not loaded. Call load() first.")
 
         before = self.df.shape[0]
-        self.df = self.df.drop_duplicates().reset_index(drop=True)
+        self.df = duplicate_dataframe(self.df)
         after = self.df.shape[0]
         removed = before - after
         return removed
-
 
 
 
@@ -57,18 +56,22 @@ class DataDiagnosticsPreprocessor:
         if self.df is None:
             raise RuntimeError("Data not loaded. Call load() first.")
 
-        # Appliquer le préprocesseur (HeartDiseasePreprocessor)
-        processed = self.preprocessor.fit_transform(self.df)
+        # Séparer les caractéristiques et la cible
+        try:
+            X_raw,y_raw = split_features_target(self.df, target=self.target_column)
+        except KeyError:
+            X_raw, y_raw = self.df.copy(), None
 
-        if self.target_column in processed.columns:
-            self.X_transformed = processed.drop(columns=[self.target_column])
-            y_raw = processed[self.target_column]
-            self.y_arr = y_raw.astype(int)
+        self.preprocessor.fit(X_raw)
+        # Appliquer le préprocesseur (HeartDiseasePreprocessor)
+        self.X_transformed = self.preprocessor.transform(X_raw)
+
+        if y_raw is not None:
+                mapping = { "Yes": 1, "No": 0 }
+                self.y_arr = y_raw.map(mapping).fillna(y_raw).astype(int)
         else:
-            self.X_transformed = processed
             self.y_arr = None
         return self.X_transformed
-
 
 
 
@@ -79,7 +82,6 @@ class DataDiagnosticsPreprocessor:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         out_df.to_csv(output_path, index=False)
         return output_path
-
 
 
 

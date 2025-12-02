@@ -23,7 +23,6 @@ class process_data_analytics:
 
 
 
-
     # Vérification des valeurs manquantes dans le DataFrame
     def check_missing_values(self) -> pd.DataFrame:
         logger.info("Checking for missing values...")
@@ -36,18 +35,17 @@ class process_data_analytics:
 
 
 
-
     # Calcule les statistiques descriptives pour les colonnes numériques
     def get_statistics(self) -> pd.DataFrame:
         logger.info("Calculating descriptive statistics...")
         return self.df[self.numerical_cols].describe().T
 
 
+
     # Calcule la matrice de corrélation pour les colonnes numériques
     def get_correlations(self) -> pd.DataFrame:
         logger.info("Calculating correlations...")
         return self.df[self.numerical_cols].corr()
-
 
 
 
@@ -58,8 +56,6 @@ class process_data_analytics:
         for col in self.categorical_cols:
             summary[col] = self.df[col].value_counts().to_dict()
         return summary
-
-
 
 
 

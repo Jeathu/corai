@@ -1,0 +1,161 @@
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="utilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="orchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#43e97b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38f9d7;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="transGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fa709a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fee140;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.15"/>
+    </filter>
+    
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#667eea" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#f8f9fa"/>
+  
+  <!-- Main container -->
+  <rect x="50" y="30" width="1100" height="640" rx="12" fill="white" filter="url(#shadow)"/>
+  
+  <!-- Header -->
+  <rect x="50" y="30" width="1100" height="80" rx="12" fill="url(#headerGrad)"/>
+  <text x="600" y="75" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" text-anchor="middle">
+    ARCHITECTURE DU PIPELINE
+  </text>
+  
+  <!-- Module 1: data_loader.py -->
+  <g transform="translate(100, 180)">
+    <rect width="280" height="420" rx="8" fill="url(#utilGrad)" filter="url(#shadow)"/>
+    
+    <!-- Header module -->
+    <rect width="280" height="50" rx="8" fill="#2d3748" opacity="0.9"/>
+    <text x="140" y="20" font-family="monospace" font-size="14" font-weight="bold" fill="white" text-anchor="middle">
+      data_loader.py
+    </text>
+    <text x="140" y="38" font-family="Arial, sans-serif" font-size="12" fill="#a0aec0" text-anchor="middle">
+      UTILITAIRES
+    </text>
+    
+    <!-- Functions -->
+    <g transform="translate(20, 80)">
+      <text x="0" y="0" font-family="monospace" font-size="15" font-weight="600" fill="#1a202c">Fonctions :</text>
+      
+      <rect x="0" y="15" width="240" height="45" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="38" font-family="monospace" font-size="13" fill="#2d3748">• load_data()</text>
+      
+      <rect x="0" y="70" width="240" height="65" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="93" font-family="monospace" font-size="13" fill="#2d3748">• split_features_</text>
+      <text x="15" y="113" font-family="monospace" font-size="13" fill="#2d3748">  target()</text>
+      
+      <rect x="0" y="145" width="240" height="65" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="168" font-family="monospace" font-size="13" fill="#2d3748">• duplicate_</text>
+      <text x="15" y="188" font-family="monospace" font-size="13" fill="#2d3748">  dataframe()</text>
+    </g>
+  </g>
+  
+  <!-- Module 2: preprocessing_pipeline.py -->
+  <g transform="translate(450, 180)">
+    <rect width="280" height="420" rx="8" fill="url(#orchGrad)" filter="url(#shadow)"/>
+    
+    <!-- Header module -->
+    <rect width="280" height="50" rx="8" fill="#2d3748" opacity="0.9"/>
+    <text x="140" y="20" font-family="monospace" font-size="13" font-weight="bold" fill="white" text-anchor="middle">
+      preprocessing_pipeline.py
+    </text>
+    <text x="140" y="38" font-family="Arial, sans-serif" font-size="12" fill="#a0aec0" text-anchor="middle">
+      ORCHESTRATEUR
+    </text>
+    
+    <!-- Functions -->
+    <g transform="translate(20, 80)">
+      <text x="0" y="0" font-family="monospace" font-size="15" font-weight="600" fill="#1a202c">Fonctions :</text>
+      
+      <rect x="0" y="15" width="240" height="45" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="38" font-family="monospace" font-size="13" fill="#2d3748">• load()</text>
+      
+      <rect x="0" y="70" width="240" height="65" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="93" font-family="monospace" font-size="13" fill="#2d3748">• fit_transform_</text>
+      <text x="15" y="113" font-family="monospace" font-size="13" fill="#2d3748">  preprocessor()</text>
+      
+      <rect x="0" y="145" width="240" height="65" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="168" font-family="monospace" font-size="13" fill="#2d3748">• remove_</text>
+      <text x="15" y="188" font-family="monospace" font-size="13" fill="#2d3748">  duplicates()</text>
+      
+      <rect x="0" y="220" width="240" height="65" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="243" font-family="monospace" font-size="13" fill="#2d3748">• export_</text>
+      <text x="15" y="263" font-family="monospace" font-size="13" fill="#2d3748">  processed()</text>
+    </g>
+  </g>
+  
+  <!-- Module 3: feature_transformer.py -->
+  <g transform="translate(800, 180)">
+    <rect width="280" height="420" rx="8" fill="url(#transGrad)" filter="url(#shadow)"/>
+    
+    <!-- Header module -->
+    <rect width="280" height="50" rx="8" fill="#2d3748" opacity="0.9"/>
+    <text x="140" y="20" font-family="monospace" font-size="12" font-weight="bold" fill="white" text-anchor="middle">
+      feature_transformer.py
+    </text>
+    <text x="140" y="38" font-family="Arial, sans-serif" font-size="12" fill="#a0aec0" text-anchor="middle">
+      TRANSFORMER
+    </text>
+    
+    <!-- Functions -->
+    <g transform="translate(20, 80)">
+      <text x="0" y="0" font-family="monospace" font-size="15" font-weight="600" fill="#1a202c">Fonctions :</text>
+      
+      <rect x="0" y="15" width="240" height="45" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="38" font-family="monospace" font-size="13" fill="#2d3748">• fit()</text>
+      
+      <rect x="0" y="70" width="240" height="45" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="93" font-family="monospace" font-size="13" fill="#2d3748">• transform()</text>
+      
+      <rect x="0" y="125" width="240" height="65" rx="6" fill="white" opacity="0.9"/>
+      <text x="15" y="148" font-family="monospace" font-size="13" fill="#2d3748">• X_transformed</text>
+      <text x="15" y="168" font-family="monospace" font-size="13" fill="#4a5568" font-style="italic">(sortie)</text>
+    </g>
+  </g>
+  
+  <!-- Arrows -->
+  <!-- data_loader -> preprocessing (load) -->
+  <path d="M 380 280 L 440 280" stroke="#667eea" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- data_loader -> preprocessing (split) -->
+  <path d="M 380 330 L 440 330" stroke="#667eea" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- data_loader -> preprocessing (duplicate) -->
+  <path d="M 380 500 L 440 500" stroke="#667eea" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- preprocessing -> transformer (fit) -->
+  <path d="M 730 330 L 790 330" stroke="#667eea" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- preprocessing -> transformer (transform) -->
+  <path d="M 730 360 L 790 360" stroke="#667eea" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- transformer -> preprocessing (X_transformed return) -->
+  <path d="M 790 400 L 770 400 Q 760 400 760 410 L 760 440 Q 760 450 750 450 L 740 450" stroke="#fa709a" stroke-width="3" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+  
+  <!-- Legend for dashed arrow -->
+  <g transform="translate(850, 630)">
+    <line x1="0" y1="10" x2="30" y2="10" stroke="#fa709a" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="40" y="15" font-family="Arial, sans-serif" font-size="11" fill="#4a5568">Retour de données</text>
+  </g>
+</svg>

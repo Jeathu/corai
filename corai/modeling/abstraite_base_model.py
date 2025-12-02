@@ -34,7 +34,6 @@ class BaseModel(ABC):
 
 
 
-
     @abstractmethod
     def _initialize_model(self):
         """Initialise le modèle sklearn - à implémenter par chaque sous-classe"""
@@ -42,12 +41,10 @@ class BaseModel(ABC):
 
 
 
-
     @abstractmethod
     def get_default_params(self) -> Dict[str, Any]:
         """Retourne les hyperparamètres par défaut - À implémenter"""
         pass
-
 
 
 
@@ -82,7 +79,6 @@ class BaseModel(ABC):
 
 
 
-
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         """
         Effectue des prédictions
@@ -95,7 +91,6 @@ class BaseModel(ABC):
         """
         self._check_is_trained()
         return self.model.predict(X)
-
 
 
 
@@ -117,12 +112,10 @@ class BaseModel(ABC):
 
 
 
-
     def _check_is_trained(self):
         """Vérifie que le modèle est entraîné"""
         if not self.is_trained:
             raise RuntimeError(f"Le modèle {self.name} n'est pas encore entraîné. Appelez fit() d'abord.")
-
 
 
 
@@ -132,14 +125,12 @@ class BaseModel(ABC):
 
 
 
-
     def set_params(self, **params):
         """Met à jour les hyperparamètres"""
         if self.model:
             self.model.set_params(**params)
         self.hyperparameters.update(params)
         return self
-
 
 
 
@@ -173,7 +164,6 @@ class BaseModel(ABC):
 
 
 
-
     @classmethod
     def load(cls, filepath: Path) -> 'BaseModel':
         """
@@ -195,7 +185,6 @@ class BaseModel(ABC):
         instance.is_trained = model_data['is_trained']
         instance.models_dir = MODELS_DIR
         return instance
-
 
 
 
@@ -224,12 +213,9 @@ class BaseModel(ABC):
 
 
 
-
-
     def __repr__(self) -> str:
         status = "Entraîné" if self.is_trained else "⏳ Non entraîné"
         return f"{self.name} ({status})"
-
 
 
 

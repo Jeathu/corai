@@ -18,13 +18,14 @@ from corai.preprocessing.data_loader import load_data
 app = typer.Typer()
 
 
+
 class ModelPredictor:
     """Classe pour charger un modèle et faire des prédictions."""
 
     def __init__(self, model_path: Path):
         """
         Initialise le prédicteur.
-        
+
         Args:
             model_path: Chemin vers le modèle sauvegardé
         """
@@ -34,17 +35,19 @@ class ModelPredictor:
         self.model_metadata: Dict[str, Any] = {}
         self.load_model()
 
+
+
     def load_model(self):
         """Charge le modèle depuis le fichier pickle ou joblib."""
         if not self.model_path.exists():
             raise FileNotFoundError(f"Modèle non trouvé: {self.model_path}")
-        
+
         logger.info(f"Chargement du modèle depuis: {self.model_path}")
-        
-        # Essayer de charger avec joblib d'abord (nouveau format BaseModel)
+
+        # Charger le modèle avec joblib
         try:
             model_data = joblib.load(self.model_path)
-            
+
             # Format BaseModel: dict avec 'model', 'metadata', 'model_type'
             if isinstance(model_data, dict) and 'model' in model_data:
                 self.model = model_data['model']
@@ -63,14 +66,14 @@ class ModelPredictor:
                 # Ancien format: juste le modèle sklearn
                 self.model = model_data
                 logger.info("Ancien format de modèle détecté")
-        
+
         except Exception as e_joblib:
             # Essayer pickle (ancien format)
             logger.debug(f"Erreur joblib: {e_joblib}, tentative avec pickle...")
             try:
                 with open(self.model_path, "rb") as f:
                     model_data = pickle.load(f)
-                
+
                 if isinstance(model_data, dict):
                     self.model = model_data.get("model")
                     self.model_type = model_data.get("model_type")
@@ -79,54 +82,56 @@ class ModelPredictor:
                         "cv_scores": model_data.get("cv_scores")
                     }
                 else:
-                    # Ancien format: juste le modèle
                     self.model = model_data
             except Exception as e_pickle:
                 logger.error(f"Impossible de charger le modèle avec joblib ou pickle")
                 raise RuntimeError(f"Erreur de chargement: joblib={e_joblib}, pickle={e_pickle}")
-        
         logger.success(f"Modèle chargé avec succès (type: {self.model_type})")
+
+
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
         """
         Fait des prédictions sur les données.
-        
+
         Args:
             X: Features pour la prédiction
-        
+
         Returns:
             Array des prédictions
         """
         if self.model is None:
             raise RuntimeError("Modèle non chargé")
-        
+
         logger.info(f"Prédiction sur {X.shape[0]} échantillons...")
         predictions = self.model.predict(X)
         logger.success("Prédictions terminées")
-        
         return predictions
+
+
 
     def predict_proba(self, X: pd.DataFrame) -> Optional[np.ndarray]:
         """
         Retourne les probabilités de prédiction (si disponible).
-        
+
         Args:
             X: Features pour la prédiction
-        
+
         Returns:
             Array des probabilités ou None si non disponible
         """
         if self.model is None:
             raise RuntimeError("Modèle non chargé")
-        
+
         if not hasattr(self.model, "predict_proba"):
             logger.warning("Le modèle ne supporte pas predict_proba")
             return None
-        
+
         logger.info("Calcul des probabilités...")
         probabilities = self.model.predict_proba(X)
-        
         return probabilities
+
+
 
     def save_predictions(
         self,
@@ -138,7 +143,7 @@ class ModelPredictor:
     ):
         """
         Sauvegarde les prédictions dans un fichier CSV.
-        
+
         Args:
             predictions: Array des prédictions
             output_path: Chemin de sortie
@@ -146,16 +151,16 @@ class ModelPredictor:
             include_features: Features à inclure dans le fichier
         """
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         result_df = pd.DataFrame()
-        
+
         # Ajouter les features si fournies
         if include_features is not None:
             result_df = include_features.copy()
-        
+
         # Ajouter les prédictions
         result_df["predictions"] = predictions
-        
+
         # Ajouter les probabilités si disponibles
         if probabilities is not None:
             n_classes = probabilities.shape[1]
@@ -169,6 +174,7 @@ class ModelPredictor:
         logger.success(f"Prédictions sauvegardées: {output_path}")
 
 
+
 def predict_from_file(
     model_path: Path,
     data_path: Path,
@@ -179,7 +185,7 @@ def predict_from_file(
 ) -> pd.DataFrame:
     """
     Fait des prédictions à partir de fichiers.
-    
+
     Args:
         model_path: Chemin vers le modèle
         data_path: Chemin vers les données
@@ -202,18 +208,18 @@ def predict_from_file(
         X = df.drop(columns=[target_column])
     else:
         X = df
-    
+
     # Créer le prédicteur
     predictor = ModelPredictor(model_path)
-    
+
     # Faire les prédictions
     predictions = predictor.predict(X)
-    
+
     # Calculer les probabilités 
     probabilities = None
     if include_probabilities:
         probabilities = predictor.predict_proba(X)
-    
+
     # Sauvegarder
     features_to_save = X if save_features else None
     predictor.save_predictions(
@@ -223,7 +229,7 @@ def predict_from_file(
         include_features=features_to_save,
         y_true=y_true.values if y_true is not None else None
     )
-    
+
     # Retourner un DataFrame avec les résultats
     result_df = pd.DataFrame({"predictions": predictions})
     if probabilities is not None:
@@ -237,6 +243,8 @@ def predict_from_file(
     return result_df
 
 
+
+
 @app.command()
 def main(
     model_path: Path = MODELS_DIR / "heart_disease_model.pkl",
@@ -248,7 +256,7 @@ def main(
 ):
     """
     Fait des prédictions avec un modèle entraîné.
-    
+
     Args:
         model_path: Chemin vers le modèle entraîné
         data_path: Chemin vers les données de test
@@ -264,7 +272,7 @@ def main(
         save_features=save_features,
         target_column=target_column,
     )
-    
+
     logger.success("Prédictions terminées avec succès!")
     typer.echo(f"Prédictions sauvegardées: {predictions_output}")
 

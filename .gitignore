@@ -201,3 +201,9 @@ models/*
 
 #Logs
 COMPLETION_REPORT.txt
+
+
+
+# preprocessing files
+corai/preprocessing/*.txt
+corai/modeling/*.txt

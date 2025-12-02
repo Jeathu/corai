@@ -23,22 +23,31 @@ def load_data(path: Path) -> pd.DataFrame:
 
 
 
-
-def split_features_target(df: pd.DataFrame, target: str = "Heart Disease Status") -> tuple[pd.DataFrame, pd.Series]:
+def split_features_target(df: pd.DataFrame, target: str = "Heart Disease") -> tuple[pd.DataFrame, pd.Series]:
     """
-    Séparation le DataFrame en caractéristiques (X)features  et cible (y)
+    Sépare le DataFrame en features (X) et cible (y).
 
-        Exceptions:
-            KeyError: Si la colonne cible n'est pas présente dans le DataFrame
-            TypeError: Si df n'est pas un DataFrame pandas
+    Exceptions:
+        KeyError: Si la colonne cible n'est pas présente
+        TypeError: Si df n'est pas un DataFrame pandas
     """
-
     if not isinstance(df, pd.DataFrame):
-        raise TypeError("le dataframe fourni n'est pas un DataFrame pandas")
+        raise TypeError("Le dataframe fourni n'est pas un DataFrame pandas")
 
     if target not in df.columns:
-        raise KeyError(f"Target column '{target}' not found. Available columns: {list(df.columns)}")
+        raise KeyError(f"Target column '{target}' not found. Available: {list(df.columns)}")
 
-    X = df.loc[:, df.columns != target].copy()
-    y = df.loc[:, target].copy()
+    X = df.drop(columns=[target])
+    y = df[target].copy()
     return X, y
+
+
+
+def duplicate_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    """Supprime les lignes dupliquées du DataFrame."""
+    initial_shape = df.shape
+    df_cleaned = df.drop_duplicates().reset_index(drop=True)
+    logger.info(f"Removed {initial_shape[0] - df_cleaned.shape[0]} duplicate rows.")
+    return df_cleaned
+
+

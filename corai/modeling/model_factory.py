@@ -25,46 +25,51 @@ class ModelFactory:
         'svm': SVM
     }
 
+
     @classmethod
     def create_model(cls, model_type: str, **kwargs) -> BaseModel:
         """
         Crée une instance de modèle
-        
+
         Args:
             model_type: Type de modèle ('logistic_regression', 'random_forest', etc.)
             **kwargs: Hyperparamètres à passer au modèle
-            
+
         Returns:
             Instance du modèle
-            
+
         Raises:
             ValueError: Si le type de modèle n'est pas supporté
         """
         model_type = model_type.lower()
-        
+
         if model_type not in cls.MODEL_REGISTRY:
             available = list(cls.MODEL_REGISTRY.keys())
             raise ValueError(
                 f"Type de modèle '{model_type}' non supporté. "
                 f"Modèles disponibles: {available}"
             )
-        
+
         model_class = cls.MODEL_REGISTRY[model_type]
         return model_class(**kwargs)
+
+
 
     @classmethod
     def list_available_models(cls) -> list:
         """Retourne la liste des modèles disponibles"""
         return list(cls.MODEL_REGISTRY.keys())
 
+
+
     @classmethod
     def get_param_grid(cls, model_type: str) -> Dict[str, list]:
         """
         Retourne la grille de paramètres pour GridSearchCV
-        
+
         Args:
             model_type: Type de modèle
-            
+
         Returns:
             Dictionnaire avec les paramètres à tester
         """
@@ -92,5 +97,5 @@ class ModelFactory:
                 "gamma": ["scale", "auto"]
             }
         }
-        
+
         return param_grids.get(model_type, {})

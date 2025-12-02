@@ -47,7 +47,6 @@ class ModelEvaluator:
 
 
 
-
     def evaluate_classification(self,y_true: np.ndarray,
         y_pred: np.ndarray,
         y_proba: Optional[np.ndarray] = None
@@ -97,7 +96,6 @@ class ModelEvaluator:
 
 
 
-
     def evaluate_regression(self,y_true: np.ndarray,y_pred: np.ndarray) -> Dict[str, Any]:
         """
         Évalue un modèle de régression.
@@ -124,7 +122,6 @@ class ModelEvaluator:
 
 
 
-
     def save_metrics(self, output_path: Path) -> None:
         """
           Sauvegarde les métriques dans un fichier JSON.
@@ -137,8 +134,6 @@ class ModelEvaluator:
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(self.metrics, f, indent=4, ensure_ascii=False)
         logger.success(f"Métriques sauvegardées: {output_path}")
-
-
 
 
 
@@ -167,8 +162,6 @@ class ModelEvaluator:
 
             if "mape" in self.metrics:
                 logger.info(f"MAPE: {self.metrics['mape']:.2f}%")
-
-
 
 
 

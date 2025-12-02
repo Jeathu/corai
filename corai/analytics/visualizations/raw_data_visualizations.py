@@ -41,7 +41,6 @@ class VisualisateurMatplotlib:
 
 
 
-
     # Crée un histogramme pour la distribution d'une colonne numérique
     def tracer_distribution_numerique(self, colonne: str) -> plt.Figure:
         logger.info(f"Création du graphique de distribution pour {colonne}...")
@@ -56,7 +55,6 @@ class VisualisateurMatplotlib:
 
         plt.tight_layout()
         return fig
-
 
 
 
@@ -78,7 +76,6 @@ class VisualisateurMatplotlib:
 
 
 
-
     # Crée un bar chart pour la distribution d'une colonne catégorique
     def tracer_distribution_categorique(self, colonne: str) -> plt.Figure:
         logger.info(f"Création du graphique de distribution pour {colonne}...")
@@ -97,7 +94,6 @@ class VisualisateurMatplotlib:
 
         plt.tight_layout()
         return fig
-
 
 
 
@@ -132,7 +128,6 @@ class VisualisateurMatplotlib:
 
 
 
-
     # Crée une heatmap des corrélations
     def tracer_heatmap_correlation(self) -> plt.Figure:
         logger.info("Création de la heatmap de corrélation...")
@@ -148,7 +143,6 @@ class VisualisateurMatplotlib:
 
         plt.tight_layout()
         return fig
-
 
 
 
@@ -172,7 +166,6 @@ class VisualisateurMatplotlib:
 
         plt.tight_layout()
         return fig
-
 
 
 
@@ -211,7 +204,6 @@ class VisualisateurMatplotlib:
 
 
 
-
     # Crée une matrice de paires pour les 4 premières colonnes numériques
     def tracer_paires(self) -> plt.Figure:
         logger.info("Création de la matrice de paires...")
@@ -240,7 +232,6 @@ class VisualisateurMatplotlib:
         fig.suptitle("Matrice de Paires (Données Brutes)", fontsize=14, fontweight='bold')
         plt.tight_layout()
         return fig
-
 
 
 
@@ -296,8 +287,6 @@ class VisualisateurMatplotlib:
         self._generer_rapport_html(chemin_sortie)
 
         logger.success(f"Toutes les visualisations sauvegardées dans {chemin_sortie.parent}")
-
-
 
 
 
