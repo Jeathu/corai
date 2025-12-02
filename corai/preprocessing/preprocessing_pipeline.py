@@ -28,6 +28,7 @@ class DataDiagnosticsPreprocessor:
 
 
 
+    # wrapper pour load_data
     def load(self, path: Path) -> pd.DataFrame:
         """Charge les données depuis un fichier CSV."""
         self.df = load_data(path)
@@ -35,6 +36,7 @@ class DataDiagnosticsPreprocessor:
 
 
 
+    # wrapper pour duplicate_dataframe
     def remove_duplicates(self) -> int:
         """ 
         Wrapper: Supprime les lignes dupliquées du DataFrame en appelant 
@@ -51,6 +53,7 @@ class DataDiagnosticsPreprocessor:
 
 
 
+    # wrapper pour fit_transform du préprocesseur
     def fit_transform_preprocessor(self) -> pd.DataFrame:
         """Ajuste et transforme les données avec le préprocesseur."""
         if self.df is None:
@@ -62,8 +65,8 @@ class DataDiagnosticsPreprocessor:
         except KeyError:
             X_raw, y_raw = self.df.copy(), None
 
-        self.preprocessor.fit(X_raw)
         # Appliquer le préprocesseur (HeartDiseasePreprocessor)
+        self.preprocessor.fit(X_raw)
         self.X_transformed = self.preprocessor.transform(X_raw)
 
         if y_raw is not None:
@@ -75,6 +78,7 @@ class DataDiagnosticsPreprocessor:
 
 
 
+    # méthode pour exporter les données traitées
     def export_processed(self, X_df: pd.DataFrame, y_series: pd.Series, output_path: Path) -> Path:
         """Exporte les données traitées vers un fichier CSV."""
         out_df = X_df.copy()

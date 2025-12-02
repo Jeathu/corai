@@ -19,14 +19,16 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
         self._encoder: Optional[OneHotEncoder] = None
 
 
+
+    # Méthode pour détecter les colonnes numériques et catégorielles
     def _detecter_colonnes(self, df: pd.DataFrame) -> None:
         """Détecte les colonnes numériques et catégorielles automatiquement."""
         self.numerical_columns = list(df.select_dtypes(include=["int64", "float64"]).columns)
         self.categorical_columns = list(df.select_dtypes(include=["object", "category"]).columns)
-        # Supprimé : plus besoin de retirer target_column car X n'a pas la target
 
 
 
+    # Méthode pour ajuster et transformer les données
     def fit(self, X: pd.DataFrame, y=None) -> "HeartDiseasePreprocessor":
         if not isinstance(X, pd.DataFrame):
             raise TypeError("X doit être un DataFrame pandas")
@@ -54,6 +56,7 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
 
 
+    # Méthode pour transformer les données
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         if not self._fitted:
             raise RuntimeError("Le préprocesseur doit être ajusté avant transform().")
@@ -78,6 +81,7 @@ class HeartDiseasePreprocessor(BaseEstimator, TransformerMixin):
 
 
 
+    # Méthode pour ajuster et transformer en une seule opération
     def fit_transform(self, X: pd.DataFrame, y=None) -> pd.DataFrame:
         """Ajuste et transforme en une seule opération."""
         return self.fit(X, y).transform(X)

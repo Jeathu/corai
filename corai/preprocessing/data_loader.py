@@ -4,14 +4,7 @@ from loguru import logger
 
 
 import typer
-
-from corai.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-
-
-
-
 app = typer.Typer()
-
 
 
 # Méthode pour charger les données
@@ -23,6 +16,7 @@ def load_data(path: Path) -> pd.DataFrame:
 
 
 
+# Méthode pour séparer features et target
 def split_features_target(df: pd.DataFrame, target: str = "Heart Disease") -> tuple[pd.DataFrame, pd.Series]:
     """
     Sépare le DataFrame en features (X) et cible (y).
@@ -43,6 +37,7 @@ def split_features_target(df: pd.DataFrame, target: str = "Heart Disease") -> tu
 
 
 
+# Méthode pour supprimer les doublons
 def duplicate_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """Supprime les lignes dupliquées du DataFrame."""
     initial_shape = df.shape
