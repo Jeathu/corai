@@ -16,6 +16,8 @@ Execute tout le processus en une seule commande:
 # Pipeline basique avec Random Forest
 python -m corai.pipeline_complete
 
+
+
 # Avec Logistic Regression
 python -m corai.pipeline_complete --model-type logistic_regression
 

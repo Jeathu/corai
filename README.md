@@ -70,7 +70,7 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 ## *3. Prétraitement*
 ### Pourquoi c'est crucial ?
 
--** le prétraitement améliore la qualité des données brutes, ce qui est essentiel pour la performance des modèles ML.**
+-**le prétraitement améliore la qualité des données brutes, ce qui est essentiel pour la performance des modèles ML.**
 
 <br>
 
@@ -116,6 +116,8 @@ X_normalisé = (X - moyenne) / écart-type
 | Age = 45 | 45 | -0.85 |
 | Cholesterol = 200 | 200 | -0.71 |
 
+<br>
+
 
 ![Architecture du preprocessing](/images/stand.png)
 
@@ -156,6 +158,17 @@ X_normalisé = (X - moyenne) / écart-type
 | SVM | 85% | 0.850 | 0.920 |
 | **Random Forest** | **99%** | **0.990** | **1.000** |
 | Gradient Boosting | 100% | 1.000 | 1.000 |
+
+<br>
+
+### Une exemple de  aperçu des résultats
+* __*( 0 = Pas de maladie cardiaque, 1 = Maladie cardiaque )*__
+
+<br>
+
+![Résultats](/images/prdi.png)
+
+<hr/>
 
 ### Tableau comparatif des modèles testés :
 ![Tableau comparatif](/images/tableau_comp.png)
@@ -223,7 +236,21 @@ model = ModelFactory.create("gradient_boosting")
 
 <br>
 
+
 ## *7. Utilisation*
+
+### Pour prétraitemet des données ( si vous voulez juste prétraiter )
+* les données sont déja prétraitées dans le dossier `data/processed/`   
+   donc cette étape est optionnelle.
+
+```bash
+# Prétraitement des données
+python -m corai.preprocessing.preprocessing_pipeline
+
+# Input: data/raw/heart_disease_dataset.csv
+# Output: data/processed/processed_heart_disease_v0.csv
+```
+
 
 ### Option 1 : Pipeline Complet (Recommandé)
 
@@ -232,12 +259,9 @@ model = ModelFactory.create("gradient_boosting")
 git clone https://github.com/Jeathu/corai.git
 cd corai && pip install -r requirements.txt
 
-# Prétraitement des données
-python -m corai.preprocessing.preprocessing_pipeline
-# Input: data/raw/heart_disease_dataset.csv
-# Output: data/processed/processed_heart_disease_v0.csv
 
-# Exécution du pipeline complet
+
+# 😅 Exécution en une commande du pipeline complet
 python -m corai.pipeline_complete
 ```
 
@@ -248,6 +272,7 @@ python -m corai.pipeline_complete
 #### Entraînement du modèle
 
 ```bash
+
 # Random Forest (défaut)
 python -m corai.modeling.train
 
