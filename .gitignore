@@ -191,13 +191,13 @@ cython_debug/
 .pypirc
 
 #Reports
-reports/*.json
+#reports/*.json
 reports/*.txt
 reports/demo_results/
 
 
 #Models
-models/*
+#models/*
 
 #Logs
 COMPLETION_REPORT.txt

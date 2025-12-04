@@ -2,18 +2,21 @@
 
 **Auteur :** Jeathusan et Merouane  
 **Date :** 04 Décembre 2025
-**GitHub :** [github.com/Jeathu/corai](https://github.com/Jeathu/corai)
-**Source :** [Kaggle](https://www.kaggle.com/datasets/rashadrmammadov/heart-disease-prediction)
+<hr/>
+
+**GitHub :** [github.com/Jeathu/corai](https://github.com/Jeathu/corai)   
+**Source :** [Kaggle](https://www.kaggle.com/datasets/rashadrmammadov/heart-disease-prediction)   
+**Présentation(en cours de progression) :** [Canva](https://www.canva.com/design/DAG6dMip9c4/Zi8ENREUPbaIjSDzmKoq-A/view?utm_content=DAG6dMip9c4&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=he0c4e8db3f)
 
 ---
 
-## 1. Introduction
+## *1. Introduction*
 
-### Contexte
+### - Contexte
 
 Les maladies cardiovasculaires sont la **première cause de mortalité mondiale** (17.9 millions de décès/an). Le diagnostic repose sur des examens coûteux et l'expertise de spécialistes peu disponibles.
 
-### Objectif
+### - Objectif
 
 Développer un système ML de prédiction du risque cardiaque à partir de 16 variables cliniques simples.
 
@@ -24,8 +27,9 @@ Développer un système ML de prédiction du risque cardiaque à partir de 16 va
 | Architecture extensible | Factory Pattern | ✅ |
 
 ---
+<br>
 
-## 2. Les Données
+## *2. Les Données*
 
 **Fichier :** `data/raw/heart_disease_dataset.csv`  
 **Taille :** 1000 patients × 17 colonnes
@@ -45,12 +49,25 @@ Sains   : 608 (60.8%)
 Malades : 392 (39.2%)
 Ratio 1.55:1 → Équilibré 😁 (pas besoin de SMOTE)
 ```
+![Comparative de équilibrage](/images/output.png)
+
+
+__*- Recherche effectuée sur le rééquilibrage de dataset*__
+
+![rééquilibrage](/images/equilibrage.png)
+
+* Mais dans notre cas, le dataset est équilibré donc pas besoin de rééquilibrage.
+
+#### __*- Recherche effectuée*__
+* **SMOTE** (__*Over - sampling Technique*__) est une technique pour équilibrer un dataset en créant de nouvelles données synthétiques pour la classe minoritaire.
+
+![smote](/images/SMOTE-points-for.png)
 
 
 ---
+<br>
 
-## 3. Prétraitement
-
+## *3. Prétraitement*
 ### Pourquoi c'est crucial ?
 
 | Modèle | Sans prétraitement | Avec prétraitement |
@@ -60,15 +77,19 @@ Ratio 1.55:1 → Équilibré 😁 (pas besoin de SMOTE)
 
 ### Architecture en 3 Modules
 
-![Architecture du preprocessing](corai/preprocessing/doc/image/preprocess.png)
+![Architecture du preprocessing](/images/preprocess.png)
 
+
+
+
+__*- Mais dans notre cas, le dataset est équilibré donc pas besoin de rééquilibrage.*__
 
 **Intérêts :**
 - **Maintenabilité** : modifier une étape sans toucher aux autres
 - **Testabilité** : tests unitaires par module
 - **Scalabilité** : ajout facile de nouvelles transformations
 
-### Transformations Appliquées
+### __*- Transformations Appliquées*__
 
 #### Encodage : Transformation des variables catégorielles en variables numériques (One-Hot Encoding scikit-learn)
 
@@ -97,9 +118,11 @@ X_normalisé = (X - moyenne) / écart-type
 
 ---
 
-## 4. Modèles
+<br>
 
-![Architecture du modèle](corai/preprocessing/doc/image/models_sc.png)
+## *4. Modèles*
+
+![Architecture du modèle](/images/models_sc.png)
 
 ### Stratégie Multi-Modèles
 
@@ -117,20 +140,10 @@ X_normalisé = (X - moyenne) / écart-type
 2. Feature importance → interprétable
 3. Gère les interactions non-linéaires
 
-### Validation Croisée Stratifiée 5-Fold
 
-```
-Fold 1: [VAL][TRAIN][TRAIN][TRAIN][TRAIN]
-Fold 2: [TRAIN][VAL][TRAIN][TRAIN][TRAIN]
-...
-→ 5 évaluations, score = moyenne
-```
+<br>
 
-Préserve le ratio 60/40 dans chaque fold.
-
----
-
-## 5. Résultats
+## *5. Résultats*
 
 ### Performances
 
@@ -142,7 +155,7 @@ Préserve le ratio 60/40 dans chaque fold.
 | Gradient Boosting | 100% | 1.000 | 1.000 |
 
 ### Tableau comparatif des modèles testés :
-![Tableau comparatif](corai/preprocessing/doc/image/tableau_comp.png)
+![Tableau comparatif](/images/tableau_comp.png)
 
 ### Matrice de Confusion (Random Forest)
 
@@ -173,7 +186,9 @@ Erreurs : 2/200 (1%)
 
 ---
 
-## 6. Architecture de fichier source 
+<br>
+
+## *6. Architecture de fichier source*
 
 ```
 corai/
@@ -203,7 +218,9 @@ model = ModelFactory.create("gradient_boosting")
 
 ---
 
-## 7. Utilisation
+<br>
+
+## *7. Utilisation*
 
 ### Option 1 : Pipeline Complet (Recommandé)
 
@@ -262,7 +279,9 @@ python -m corai.modeling.evaluate
 
 ---
 
-## 8. Conclusion
+<br>
+
+## *8. Conclusion*
 
 ### Réalisations
 
@@ -270,7 +289,6 @@ python -m corai.modeling.evaluate
 |----------|--------|
 | Accuracy ≥ 85% | ✅ 99% |
 | Architecture extensible | ✅ Factory + Pipeline |
-| Validation robuste | ✅ CV 5-fold |
 
 ### Points Forts
 
@@ -285,5 +303,50 @@ python -m corai.modeling.evaluate
 - Docker
 
 ---
+
+<br>
+
+## *9. Organisation du projet du CorAi*
+
+```
+corai/
+├── corai/                          # package source
+│   ├── analytics/
+│   │   ├── visualizations/         # visualisations des données
+│   │   ├── eda.py                  # analyse exploratoire des données
+│   │   └── synthese_variables.py   # synthèse des variables
+│   ├── preprocessing/
+│   │   ├── data_loader.py          # chargement et nettoyage des données
+│   │   ├── feature_transformer.py  # transformations des caractéristiques
+│   │   └── preprocessing_pipeline.py
+│   ├── modeling/
+│   │   ├── abstraite_base_model.py # classe abstraite
+│   │   ├── model_factory.py        # factory pattern
+│   │   ├── train.py
+│   │   ├── predict.py
+│   │   ├── evaluate.py
+│   │   └── classifiers/            # RF, GB, LR, SVM
+│   └── __init__.py
+├── analytics/                      # EDA et visualisations (niveau projet)
+├── pipeline_complete.py            # pipeline end-to-end
+├── config.py                       # configuration (hyperparamètres, chemins)
+├── data/
+│   ├── external/                   # données tierces
+│   ├── interim/                    # données intermédiaires
+│   ├── processed/                  # jeux finaux pour modélisation
+│   └── raw/                        # données brutes immuables
+├── docs/                           # documentation
+├── models/                         # modèles entraînés et sorties
+│   └── predictions/                # fichiers de prédiction (CSV)
+├── notebooks/                      # notebooks d'EDA et notes
+├── reports/                        # rapports métriques (JSON)
+│   └── figures/                    # figures et graphiques
+├── tests/                          # tests unitaires et E2E
+├── venv/                           # environnement virtuel
+├── instruction_conf.txt            # guide de configuration du venv
+├── README.md                       # documentation principale
+└── requirements.txt                # dépendances
+```
+
 
 **04 Décembre 2025 - Module d'Apprentissage Artificiel**
