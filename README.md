@@ -59,8 +59,7 @@ Ratio 1.55:1 → Équilibré 😁 (pas besoin de SMOTE)
 
 ### Architecture en 3 Modules
 
-
-![Architecture du preprocessing](../corai/corai/preprocessing/doc/image/preprocess.png)
+![Architecture du preprocessing](corai/preprocessing/doc/image/preprocess.png)
 
 
 **Intérêts :**
@@ -99,7 +98,7 @@ X_normalisé = (X - moyenne) / écart-type
 
 ## 4. Modèles
 
-![Architecture du modèle](../corai/corai/preprocessing/doc/image/models_sc.png)
+![Architecture du modèle](corai/preprocessing/doc/image/models_sc.png)
 
 ### Stratégie Multi-Modèles
 
@@ -142,7 +141,7 @@ Préserve le ratio 60/40 dans chaque fold.
 | Gradient Boosting | 100% | 1.000 | 1.000 |
 
 ### Tableau comparatif des modèles testés :
-![Architecture du modèle](../corai/corai/preprocessing/doc/image/tableau_comp.png)
+![Tableau comparatif](corai/preprocessing/doc/image/tableau_comp.png)
 
 ### Matrice de Confusion (Random Forest)
 
