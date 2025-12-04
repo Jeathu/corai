@@ -89,7 +89,7 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 
 * __*Architecture en trois modules :*__
 
-```python
+```
 
 ### Data Loader :
 Charge les données brutes, gère les valeurs manquantes et sépare la variable cible (Y) des features (X).On garde uniquement le target.
