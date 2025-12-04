@@ -87,24 +87,27 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 
 ![Architecture du preprocessing](/images/preprocess.png)
 
+
+<br>
+
 * __*Architecture en trois modules :*__
 
-```
 
-### Data Loader :
-Charge les données brutes, gère les valeurs manquantes et sépare la variable cible (Y) des features (X).On garde uniquement le target.
-
-
-### Feature Transformer :
-Applique les transformations uniquement sur les features (X), telles que l’encodage des variables catégorielles et la normalisation des variables numériques.
+#### `Data Loader :`
+ * Charge les données brutes, gère les valeurs manquantes et sépare la variable cible (Y) des features (X).On garde uniquement le target.
 
 
-### Preprocessing Pipeline :
-Orchestre le prétraitement final en utilisant les features transformées (provenant du Feature Transformer) et la cible Y (provenant du Data Loader).Grâce à la méthode fit_transform, il produit un dataset prétraité et structuré, ce qui justifie la séparation en deux modules distincts.
-```
+#### `Feature Transformer :`
+ * Applique les transformations uniquement sur les features (X), telles que l’encodage des variables catégorielles et la normalisation des variables numériques.
 
-* vous pouvez consulter le data prétraité dans le dossier `data/processed/` sous le nom `processed_heart_disease_v0.csv`.
 
+#### `Preprocessing Pipeline`
+ * Orchestre le prétraitement final en utilisant les features transformées (provenant du Feature Transformer) et la cible Y (provenant du Data Loader).Grâce à la méthode fit_transform, il produit un dataset prétraité et structuré, ce qui justifie la séparation en deux modules distincts.
+
+
+* __*vous pouvez consulter le data prétraité dans le dossier `data/processed/` sous le nom `processed_heart_disease_v0.csv`.*__
+
+<br>
 
 **Intérêts :**
 - **Maintenabilité** : modifier une étape sans toucher aux autres
