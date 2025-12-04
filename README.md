@@ -1,8 +1,9 @@
 # CorAI - Prédiction de Maladies Cardiaques par Machine Learning
 
-**Auteur :** Jeathusan 
+**Auteur :** Jeathusan et Merouane  
 **Date :** 04 Décembre 2025
 **GitHub :** [github.com/Jeathu/corai](https://github.com/Jeathu/corai)
+**Source :** [Kaggle](https://www.kaggle.com/datasets/rashadrmammadov/heart-disease-prediction)
 
 ---
 
