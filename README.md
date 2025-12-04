@@ -5,7 +5,7 @@
 <hr/>
 
 **GitHub :** [github.com/Jeathu/corai](https://github.com/Jeathu/corai)   
-**Source :** [Kaggle](https://www.kaggle.com/datasets/rashadrmammadov/heart-disease-prediction)   
+**Source dataset :** [Kaggle](https://www.kaggle.com/datasets/rashadrmammadov/heart-disease-prediction)   
 **Présentation(en cours de progression) :** [Canva](https://www.canva.com/design/DAG6dMip9c4/Zi8ENREUPbaIjSDzmKoq-A/view?utm_content=DAG6dMip9c4&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=he0c4e8db3f)
 
 ---
@@ -70,6 +70,12 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 ## *3. Prétraitement*
 ### Pourquoi c'est crucial ?
 
+-** le prétraitement améliore la qualité des données brutes, ce qui est essentiel pour la performance des modèles ML.**
+
+<br>
+
+* __**Par exemple :**__
+
 | Modèle | Sans prétraitement | Avec prétraitement |
 |--------|-------------------|-------------------|
 | SVM | 65% | **85%** (+20%) |
@@ -82,7 +88,6 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 
 
 
-__*- Mais dans notre cas, le dataset est équilibré donc pas besoin de rééquilibrage.*__
 
 **Intérêts :**
 - **Maintenabilité** : modifier une étape sans toucher aux autres
@@ -97,8 +102,10 @@ __*- Mais dans notre cas, le dataset est équilibré donc pas besoin de rééqui
 # Avec encodage One-Hot : Male→[1,0], Female→[0,1]
 ```
 
+![Architecture du preprocessing](/images/onehotencodepng.png)
 
-#### Mise à l'échelle : Standardisation des caractéristiques numériques
+
+#### Mise à l'échelle : Standardisation des caractéristiques numériques (StandardScaler scikit-learn)
 
 ```
 X_normalisé = (X - moyenne) / écart-type
@@ -109,12 +116,8 @@ X_normalisé = (X - moyenne) / écart-type
 | Age = 45 | 45 | -0.85 |
 | Cholesterol = 200 | 200 | -0.71 |
 
-### Data Leakage - Précaution Critique
 
-```python
-# ❌ ERREUR : scaler.fit(X_complet)
-# ✅ CORRECT : scaler.fit(X_train) puis transform(X_test)
-```
+![Architecture du preprocessing](/images/stand.png)
 
 ---
 
