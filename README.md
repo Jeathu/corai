@@ -70,7 +70,7 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 ## *3. Prétraitement*
 ### Pourquoi c'est crucial ?
 
--**le prétraitement améliore la qualité des données brutes, ce qui est essentiel pour la performance des modèles ML.**
+**le prétraitement améliore la qualité des données brutes, ce qui est essentiel pour la performance des modèles ML.**
 
 <br>
 
@@ -81,18 +81,38 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 | SVM | 65% | **85%** (+20%) |
 | Logistic Regression | 78% | **86%** (+8%) |
 
+<br>
+
 ### Architecture en 3 Modules
 
 ![Architecture du preprocessing](/images/preprocess.png)
 
+* __*Architecture en trois modules :*__
+
+```python
+
+### Data Loader :
+Charge les données brutes, gère les valeurs manquantes et sépare la variable cible (Y) des features (X).On garde uniquement le target.
 
 
+### Feature Transformer :
+Applique les transformations uniquement sur les features (X), telles que l’encodage des variables catégorielles et la normalisation des variables numériques.
+
+
+### Preprocessing Pipeline :
+Orchestre le prétraitement final en utilisant les features transformées (provenant du Feature Transformer) et la cible Y (provenant du Data Loader).Grâce à la méthode fit_transform, il produit un dataset prétraité et structuré, ce qui justifie la séparation en deux modules distincts.
+```
+
+* vous pouvez consulter le data prétraité dans le dossier `data/processed/` sous le nom `processed_heart_disease_v0.csv`.
 
 
 **Intérêts :**
 - **Maintenabilité** : modifier une étape sans toucher aux autres
 - **Testabilité** : tests unitaires par module
 - **Scalabilité** : ajout facile de nouvelles transformations
+
+
+<br>
 
 ### __*- Transformations Appliquées*__
 
@@ -103,6 +123,9 @@ __*- Recherche effectuée sur le rééquilibrage de dataset*__
 ```
 
 ![Architecture du preprocessing](/images/onehotencodepng.png)
+
+
+<br>
 
 
 #### Mise à l'échelle : Standardisation des caractéristiques numériques (StandardScaler scikit-learn)
@@ -123,6 +146,7 @@ X_normalisé = (X - moyenne) / écart-type
 
 ---
 
+<br>
 <br>
 
 ## *4. Modèles*
@@ -157,7 +181,7 @@ X_normalisé = (X - moyenne) / écart-type
 | Logistic Regression | 86% | 0.859 | 0.951 |
 | SVM | 85% | 0.850 | 0.920 |
 | **Random Forest** | **99%** | **0.990** | **1.000** |
-| Gradient Boosting | 100% | 1.000 | 1.000 |
+| **Gradient Boosting** | **100%** | **1.000** | **1.000** |
 
 <br>
 
@@ -181,24 +205,33 @@ Réel 0          122        0
 Réel 1            2       76
 
 Erreurs : 2/200 (1%)
-```
-
-### Features Importantes
 
 ```
-1. Cholesterol      (0.18)
-2. Age              (0.15)
-3. Blood Pressure   (0.13)
-4. Exercise Hours   (0.11)
-5. Chest Pain Type  (0.09)
+
+### Cross-Validation (Random Forest)
+
+* C'est quoi la cross-validation ?
+   - Méthode d'évaluation des modèles qui divise les données en plusieurs parties (folds).Chaque partie sert tour à tour de jeu de test, les autres servant à l'entraînement.Cela donne une estimation plus fiable des performances.
+
+<br>
+
+![Tableau comparatif](/images/crosse.png)
+
+* `Moyenne = (Somme des scores) ÷ (Nombre de folds)`
+
+```
+Fold 1: 100%  (1)
+Fold 2: 100%  (1)
+Fold 3: 100%  (1)
+Fold 4: 100%  (1)
+Fold 5: 99%   (0.099375)
+
+Calcule : 1 + 1 + 1 + 1+ 0.99 = 4.99 ÷ 5 = 0.998
+
+Moyenne : 99.8%
 ```
 
-→ Conforme à la littérature médicale ✓
-
-### Pourquoi Random Forest et pas Gradient Boosting (100%) ?
-
-- 100% sur 1000 échantillons = suspect (surapprentissage)
-- Random Forest : meilleure généralisation
+<br>
 
 ---
 
