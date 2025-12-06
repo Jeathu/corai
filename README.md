@@ -22,9 +22,9 @@ Développer un système ML de prédiction du risque cardiaque à partir de 16 va
 
 | Objectif | Cible | Résultat |
 |----------|-------|----------|
-| Accuracy | ≥ 85% | ✅ **99%** |
-| F1-Score | ≥ 0.85 | ✅ **0.99** |
-| Architecture extensible | Factory Pattern | ✅ |
+| Accuracy | ≥ 85% |  **99%** |
+| F1-Score | ≥ 0.85 | **0.99** |
+| Architecture extensible | Factory Pattern |  |
 
 ---
 <br>
@@ -198,7 +198,7 @@ X_normalisé = (X - moyenne) / écart-type
 <hr/>
 
 ### Tableau comparatif des modèles testés :
-![Tableau comparatif](/images/tableau_comp.png)
+![Tableau comparatif](/images/metrique.png)
 
 ### Matrice de Confusion (Random Forest)
 
@@ -351,8 +351,15 @@ python -m corai.modeling.evaluate
 
 | Objectif | Statut |
 |----------|--------|
-| Accuracy ≥ 85% | ✅ 99% |
-| Architecture extensible | ✅ Factory + Pipeline |
+| Accuracy ≥ 85% | 99% |
+| Architecture extensible | Factory + Pipeline |
+
+les réalisations clés incluent :
+- Un pipeline de prétraitement modulaire
+- Une architecture de modélisation extensible
+- Des performances exceptionnelles (99% accuracy)
+- Des indicateurs de performance cohérents avec la médecine
+
 
 ### Points Forts
 
@@ -365,6 +372,7 @@ python -m corai.modeling.evaluate
 - Ajouter XGBoost, SHAP
 - API REST (FastAPI)
 - Docker
+- Création d'une interface utilisateur pour tester le modèle facilement
 
 ---
 
