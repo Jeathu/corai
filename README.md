@@ -198,7 +198,7 @@ X_normalisé = (X - moyenne) / écart-type
 <hr/>
 
 ### Tableau comparatif des modèles testés :
-![Tableau comparatif](/images/metrique.png)
+![Tableau comparatif](/images/metrique_md.png)
 
 ### Matrice de Confusion (Random Forest)
 
